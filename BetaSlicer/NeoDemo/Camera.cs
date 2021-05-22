@@ -1,5 +1,6 @@
 ﻿using ImGuiNET;
 using System;
+using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using Veldrid.Sdl2;
@@ -136,6 +137,9 @@ namespace Veldrid.NeoDemo
                 Quaternion lookRotation = Quaternion.CreateFromYawPitchRoll(Yaw, Pitch, 0f);
                 motionDir = Vector3.Transform(motionDir, lookRotation);
                 _position += motionDir * _moveSpeed * sprintFactor * deltaSeconds;
+                Debug.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Position: {0}", _position));
+                Debug.WriteLine(string.Format(System.Globalization.CultureInfo.InvariantCulture, "Yaw: {0} - Pitch: {1}", Yaw, Pitch));
+
                 UpdateViewMatrix();
             }
 

@@ -1,5 +1,6 @@
 ﻿using BetaSlicer.GUI;
 using System;
+using Veldrid.NeoDemo;
 
 namespace BetaSlicer
 {
@@ -7,8 +8,11 @@ namespace BetaSlicer
     {
         static void Main(string[] args)
         {
-            MainWindow mainWindow = new MainWindow();
-            mainWindow.Show();
+            //OldMainWindow mainWindow = new OldMainWindow();
+            //mainWindow.Show();
+
+            MainWindow window = new MainWindow();
+            window.Run();
         }
     }
 }
