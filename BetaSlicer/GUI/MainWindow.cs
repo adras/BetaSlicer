@@ -7,6 +7,8 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using Veldrid;
+using Veldrid.NeoDemo;
+using Veldrid.NeoDemo.Objects;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
 
@@ -39,6 +41,14 @@ namespace BetaSlicer.GUI
         private static uint s_tab_bar_flags = (uint)ImGuiTabBarFlags.Reorderable;
         static bool[] s_opened = { true, true, true, true }; // Persistent user state
         static void SetThing(out float i, float val) { i = val; }
+
+        // Neodemo stuff
+        Scene _scene;
+        SceneContext _sc = new SceneContext();
+        ImGuiRenderable _igRenderable;
+        private Sdl2ControllerTracker _controllerTracker;
+        FullScreenQuad _fsq;
+        private CommandList _frameCommands;
 
         public void Show()
         {
@@ -193,6 +203,9 @@ namespace BetaSlicer.GUI
                 memoryEditor.Draw("Memory Editor", memoryEditorData, memoryEditorData.Length);
             }
         }
+        
+
+
 
         private void CreateWindow()
         {
@@ -208,6 +221,71 @@ namespace BetaSlicer.GUI
             guiController = new ImGuiController(graphicsDevice, graphicsDevice.MainSwapchain.Framebuffer.OutputDescription, window.Width, window.Height);
             memoryEditor = new MemoryEditor();
             memoryEditorData = Enumerable.Range(0, 1024).Select(i => (byte)random.Next(255)).ToArray();
+
+
+
+
+            _scene = new Scene(graphicsDevice, window, _controllerTracker);
+
+            _sc.SetCurrentScene(_scene);
+
+            _igRenderable = new ImGuiRenderable(window.Width, window.Height);
+//            _resizeHandled += (w, h) => _igRenderable.WindowResized(w, h);
+            _scene.AddRenderable(_igRenderable);
+            _scene.AddUpdateable(_igRenderable);
+
+            //Skybox skybox = Skybox.LoadDefaultSkybox();
+            //_scene.AddRenderable(skybox);
+
+            Something.AddSponzaAtriumObjects(_scene);
+            _sc.Camera.Position = new Vector3(-80, 25, -4.3f);
+            _sc.Camera.Yaw = -MathF.PI / 2;
+            _sc.Camera.Pitch = -MathF.PI / 9;
+
+            ShadowmapDrawer texDrawIndexeder = new ShadowmapDrawer(() => window, () => _sc.NearShadowMapView);
+            //_resizeHandled += (w, h) => texDrawIndexeder.OnWindowResized();
+            texDrawIndexeder.Position = new Vector2(10, 25);
+            _scene.AddRenderable(texDrawIndexeder);
+
+            ShadowmapDrawer texDrawIndexeder2 = new ShadowmapDrawer(() => window, () => _sc.MidShadowMapView);
+            //_resizeHandled += (w, h) => texDrawIndexeder2.OnWindowResized();
+            texDrawIndexeder2.Position = new Vector2(20 + texDrawIndexeder2.Size.X, 25);
+            _scene.AddRenderable(texDrawIndexeder2);
+
+            ShadowmapDrawer texDrawIndexeder3 = new ShadowmapDrawer(() => window, () => _sc.FarShadowMapView);
+            //_resizeHandled += (w, h) => texDrawIndexeder3.OnWindowResized();
+            texDrawIndexeder3.Position = new Vector2(30 + (texDrawIndexeder3.Size.X * 2), 25);
+            _scene.AddRenderable(texDrawIndexeder3);
+
+            ShadowmapDrawer reflectionTexDrawer = new ShadowmapDrawer(() => window, () => _sc.ReflectionColorView);
+            //_resizeHandled += (w, h) => reflectionTexDrawer.OnWindowResized();
+            reflectionTexDrawer.Position = new Vector2(40 + (reflectionTexDrawer.Size.X * 3), 25);
+            _scene.AddRenderable(reflectionTexDrawer);
+
+            ScreenDuplicator duplicator = new ScreenDuplicator();
+            _scene.AddRenderable(duplicator);
+
+            _fsq = new FullScreenQuad();
+            _scene.AddRenderable(_fsq);
+
+            CreateAllObjects();
+            ImGui.StyleColorsClassic();
+
+        }
+
+        private void CreateAllObjects()
+        {
+            _frameCommands = graphicsDevice.ResourceFactory.CreateCommandList();
+            _frameCommands.Name = "Frame Commands List";
+            CommandList initCL = graphicsDevice.ResourceFactory.CreateCommandList();
+            initCL.Name = "Recreation Initialization Command List";
+            initCL.Begin();
+            _sc.CreateDeviceObjects(graphicsDevice, initCL, _sc);
+            CommonMaterials.CreateAllDeviceObjects(graphicsDevice, initCL, _sc);
+            _scene.CreateAllDeviceObjects(graphicsDevice, initCL, _sc);
+            initCL.End();
+            graphicsDevice.SubmitCommands(initCL);
+            initCL.Dispose();
         }
 
         private void Window_Resized()

@@ -721,6 +721,15 @@
           "lib/netcoreapp1.0/SharpDX.DXGI.dll": {}
         }
       },
+      "SixLabors.ImageSharp/1.0.0-rc0002": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.1/SixLabors.ImageSharp.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/SixLabors.ImageSharp.dll": {}
+        }
+      },
       "System.AppContext/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -2441,6 +2450,33 @@
           "lib/netstandard2.0/Veldrid.dll": {}
         }
       },
+      "Veldrid.ImageSharp/4.8.0": {
+        "type": "package",
+        "dependencies": {
+          "SixLabors.ImageSharp": "1.0.0-rc0002",
+          "Veldrid": "4.8.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Veldrid.ImageSharp.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Veldrid.ImageSharp.dll": {}
+        }
+      },
+      "Veldrid.ImGui/5.72.0": {
+        "type": "package",
+        "dependencies": {
+          "ImGui.NET": "1.72.0",
+          "Veldrid": "4.5.0",
+          "Veldrid.SDL2": "4.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Veldrid.ImGui.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Veldrid.ImGui.dll": {}
+        }
+      },
       "Veldrid.MetalBindings/4.8.0": {
         "type": "package",
         "dependencies": {
@@ -2490,6 +2526,37 @@
           }
         }
       },
+      "Veldrid.SPIRV/1.0.14": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "4.4.0",
+          "Veldrid": "4.6.1"
+        },
+        "compile": {
+          "lib/netstandard2.0/Veldrid.SPIRV.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Veldrid.SPIRV.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/linux-x64/native/libveldrid-spirv.so": {
+            "assetType": "native",
+            "rid": "linux-x64"
+          },
+          "runtimes/osx-x64/native/libveldrid-spirv.dylib": {
+            "assetType": "native",
+            "rid": "osx-x64"
+          },
+          "runtimes/win-x64/native/libveldrid-spirv.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x86/native/libveldrid-spirv.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          }
+        }
+      },
       "Veldrid.StartupUtilities/4.8.0": {
         "type": "package",
         "dependencies": {
@@ -2501,6 +2568,18 @@
         },
         "runtime": {
           "lib/netstandard2.0/Veldrid.StartupUtilities.dll": {}
+        }
+      },
+      "Veldrid.Utilities/4.8.0": {
+        "type": "package",
+        "dependencies": {
+          "Veldrid": "4.8.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Veldrid.Utilities.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Veldrid.Utilities.dll": {}
         }
       },
       "Vk/1.0.22": {
@@ -3351,6 +3430,29 @@
         "lib/uap10.0/SharpDX.DXGI.xml",
         "sharpdx.dxgi.4.0.1.nupkg.sha512",
         "sharpdx.dxgi.nuspec"
+      ]
+    },
+    "SixLabors.ImageSharp/1.0.0-rc0002": {
+      "sha512": "RLhxfy+3nG282aZ7VfY/IgajfwwTvdC5kMv+wPb1OL4M3h7/te9IWXmDI6Tl9s2SgKk6wGmC+qARzRc1b3Thkg==",
+      "type": "package",
+      "path": "sixlabors.imagesharp/1.0.0-rc0002",
+      "files": [
+        ".nupkg.metadata",
+        "lib/net472/SixLabors.ImageSharp.dll",
+        "lib/net472/SixLabors.ImageSharp.xml",
+        "lib/netcoreapp2.1/SixLabors.ImageSharp.dll",
+        "lib/netcoreapp2.1/SixLabors.ImageSharp.xml",
+        "lib/netcoreapp3.1/SixLabors.ImageSharp.dll",
+        "lib/netcoreapp3.1/SixLabors.ImageSharp.xml",
+        "lib/netstandard1.3/SixLabors.ImageSharp.dll",
+        "lib/netstandard1.3/SixLabors.ImageSharp.xml",
+        "lib/netstandard2.0/SixLabors.ImageSharp.dll",
+        "lib/netstandard2.0/SixLabors.ImageSharp.xml",
+        "lib/netstandard2.1/SixLabors.ImageSharp.dll",
+        "lib/netstandard2.1/SixLabors.ImageSharp.xml",
+        "sixlabors.imagesharp.1.0.0-rc0002.nupkg.sha512",
+        "sixlabors.imagesharp.128.png",
+        "sixlabors.imagesharp.nuspec"
       ]
     },
     "System.AppContext/4.3.0": {
@@ -7853,6 +7955,33 @@
         "veldrid.nuspec"
       ]
     },
+    "Veldrid.ImageSharp/4.8.0": {
+      "sha512": "PVoZ9DOQ+m39imRfQSEe74lBlnnOhq7V0sG10zpTLEQgmPdbJTpJPVQ+T1ZuwE9d7rBLNeHUfv6gMXkpjEonFQ==",
+      "type": "package",
+      "path": "veldrid.imagesharp/4.8.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Veldrid.ImageSharp.dll",
+        "lib/netstandard2.0/Veldrid.ImageSharp.pdb",
+        "veldrid.imagesharp.4.8.0.nupkg.sha512",
+        "veldrid.imagesharp.nuspec"
+      ]
+    },
+    "Veldrid.ImGui/5.72.0": {
+      "sha512": "uv4Ktw9DRP1AZg9qK7DN9hh95zkdPS92kObfNh6iKkbz8SeeQH5ODUpTTrcg6wf7CritSbW6WFlLsdgQX2qwog==",
+      "type": "package",
+      "path": "veldrid.imgui/5.72.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Veldrid.ImGui.dll",
+        "lib/netstandard2.0/Veldrid.ImGui.pdb",
+        "lib/netstandard2.0/Veldrid.ImGui.xml",
+        "veldrid.imgui.5.72.0.nupkg.sha512",
+        "veldrid.imgui.nuspec"
+      ]
+    },
     "Veldrid.MetalBindings/4.8.0": {
       "sha512": "7pQ4lrsQB2+oOXuVp91+MHv0qAivIOInK9x/hYEoe24HygIn7Z5pX7FPxFolnE8c5TNh3lj6HBD17sJ12rVKsQ==",
       "type": "package",
@@ -7897,6 +8026,30 @@
         "veldrid.sdl2.nuspec"
       ]
     },
+    "Veldrid.SPIRV/1.0.14": {
+      "sha512": "YZJxZ7lbEp9bwOoGoUUxs5eVfRJ6vkA79YPTRS+q8ij9YuEMq5DuYtEdnKOuWuxfSDebSYF6garCvtIwoEieiA==",
+      "type": "package",
+      "path": "veldrid.spirv/1.0.14",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/MonoAndroid10/Veldrid.SPIRV.targets",
+        "build/MonoAndroid10/native/arm64-v8a/libveldrid-spirv.so",
+        "build/MonoAndroid10/native/armeabi-v7a/libveldrid-spirv.so",
+        "build/Xamarin.iOS10/Veldrid.SPIRV.dll.config",
+        "build/Xamarin.iOS10/Veldrid.SPIRV.targets",
+        "build/Xamarin.iOS10/native/libveldrid-spirv-combined.a",
+        "build/net40/Veldrid.SPIRV.targets",
+        "lib/netstandard2.0/Veldrid.SPIRV.dll",
+        "lib/netstandard2.0/Veldrid.SPIRV.xml",
+        "runtimes/linux-x64/native/libveldrid-spirv.so",
+        "runtimes/osx-x64/native/libveldrid-spirv.dylib",
+        "runtimes/win-x64/native/libveldrid-spirv.dll",
+        "runtimes/win-x86/native/libveldrid-spirv.dll",
+        "veldrid.spirv.1.0.14.nupkg.sha512",
+        "veldrid.spirv.nuspec"
+      ]
+    },
     "Veldrid.StartupUtilities/4.8.0": {
       "sha512": "NFTUv+BtkWZQY7d2Pdmw5ZUSkzZAS+qh3aIRjw4uj7hvTAlTO6fFxnDvn/Wpm9sHLdc6b9gmEEKHPKO3naM7mw==",
       "type": "package",
@@ -7908,6 +8061,19 @@
         "lib/netstandard2.0/Veldrid.StartupUtilities.pdb",
         "veldrid.startuputilities.4.8.0.nupkg.sha512",
         "veldrid.startuputilities.nuspec"
+      ]
+    },
+    "Veldrid.Utilities/4.8.0": {
+      "sha512": "HQ1zQNgdjlD4f727e/eutU2EnRTH4SZdTGJsZ/Q0KD+TFMz0+YalqPwEXUgNZvwv0F8OWFtqH3ag02dGAg7cUg==",
+      "type": "package",
+      "path": "veldrid.utilities/4.8.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Veldrid.Utilities.dll",
+        "lib/netstandard2.0/Veldrid.Utilities.pdb",
+        "veldrid.utilities.4.8.0.nupkg.sha512",
+        "veldrid.utilities.nuspec"
       ]
     },
     "Vk/1.0.22": {
@@ -7927,7 +8093,11 @@
     ".NETCoreApp,Version=v3.1": [
       "ImGui.NET >= 1.78.0",
       "Veldrid >= 4.8.0",
-      "Veldrid.StartupUtilities >= 4.8.0"
+      "Veldrid.ImGui >= 5.72.0",
+      "Veldrid.ImageSharp >= 4.8.0",
+      "Veldrid.SPIRV >= 1.0.14",
+      "Veldrid.StartupUtilities >= 4.8.0",
+      "Veldrid.Utilities >= 4.8.0"
     ]
   },
   "packageFolders": {
@@ -7985,7 +8155,23 @@
             "target": "Package",
             "version": "[4.8.0, )"
           },
+          "Veldrid.ImGui": {
+            "target": "Package",
+            "version": "[5.72.0, )"
+          },
+          "Veldrid.ImageSharp": {
+            "target": "Package",
+            "version": "[4.8.0, )"
+          },
+          "Veldrid.SPIRV": {
+            "target": "Package",
+            "version": "[1.0.14, )"
+          },
           "Veldrid.StartupUtilities": {
+            "target": "Package",
+            "version": "[4.8.0, )"
+          },
+          "Veldrid.Utilities": {
             "target": "Package",
             "version": "[4.8.0, )"
           }

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "bB9DsZq2fKVqzqwkQu8sDD5KUNnc5HNtfaHyX+AeqElTIEQi2uKYm7L8DcaWbyvdBuXuIyesbVJJN6JUuJhHTg==",
+  "dgSpecHash": "V6s6f3j8JVyUKPz43xosem2PGb5X97O/H4kqriPdoRCHc9+4CqoYdp76ZgfHUgTVbzyFNlNap4KNJfTi6IU85A==",
   "success": true,
   "projectFilePath": "e:\\reposNew\\BetaSlicer\\BetaSlicer\\BetaSlicer\\BetaSlicer.csproj",
   "expectedPackageFiles": [
@@ -50,6 +50,7 @@
     "C:\\Users\\andre\\.nuget\\packages\\sharpdx.d3dcompiler\\4.0.1\\sharpdx.d3dcompiler.4.0.1.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\sharpdx.direct3d11\\4.0.1\\sharpdx.direct3d11.4.0.1.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\sharpdx.dxgi\\4.0.1\\sharpdx.dxgi.4.0.1.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\sixlabors.imagesharp\\1.0.0-rc0002\\sixlabors.imagesharp.1.0.0-rc0002.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\system.appcontext\\4.3.0\\system.appcontext.4.3.0.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
@@ -139,10 +140,14 @@
     "C:\\Users\\andre\\.nuget\\packages\\system.xml.xpath\\4.0.1\\system.xml.xpath.4.0.1.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\system.xml.xpath.xdocument\\4.0.1\\system.xml.xpath.xdocument.4.0.1.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\veldrid\\4.8.0\\veldrid.4.8.0.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\veldrid.imagesharp\\4.8.0\\veldrid.imagesharp.4.8.0.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\veldrid.imgui\\5.72.0\\veldrid.imgui.5.72.0.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\veldrid.metalbindings\\4.8.0\\veldrid.metalbindings.4.8.0.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\veldrid.openglbindings\\4.8.0\\veldrid.openglbindings.4.8.0.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\veldrid.sdl2\\4.8.0\\veldrid.sdl2.4.8.0.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\veldrid.spirv\\1.0.14\\veldrid.spirv.1.0.14.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\veldrid.startuputilities\\4.8.0\\veldrid.startuputilities.4.8.0.nupkg.sha512",
+    "C:\\Users\\andre\\.nuget\\packages\\veldrid.utilities\\4.8.0\\veldrid.utilities.4.8.0.nupkg.sha512",
     "C:\\Users\\andre\\.nuget\\packages\\vk\\1.0.22\\vk.1.0.22.nupkg.sha512"
   ],
   "logs": []
