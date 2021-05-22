@@ -8,7 +8,7 @@ using Veldrid.Sdl2;
 
 namespace Veldrid.NeoDemo
 {
-    public class Camera : IUpdateable
+    public class LookatCamera : IUpdateable
     {
         private float _fov = 1f;
         private float _near = 1f;
@@ -18,11 +18,12 @@ namespace Veldrid.NeoDemo
         private Matrix4x4 _projectionMatrix;
 
         private Vector3 _position = new Vector3(0, 3, 0);
-        private Vector3 _lookDirection = new Vector3(0, -.3f, -1f);
+        //        private Vector3 _lookDirection = new Vector3(0, -.3f, -1f);
+        private Vector3 _lookat = new Vector3();
         private float _moveSpeed = 10.0f;
 
-        private float _yaw;
-        private float _pitch;
+        //private float _yaw;
+        //private float _pitch;
 
         private Vector2 _mousePressedPos;
         private bool _mousePressed = false;
@@ -36,7 +37,7 @@ namespace Veldrid.NeoDemo
         public event Action<Matrix4x4> ProjectionChanged;
         public event Action<Matrix4x4> ViewChanged;
 
-        public Camera(GraphicsDevice gd, Sdl2Window window, Sdl2ControllerTracker controller)
+        public LookatCamera(GraphicsDevice gd, Sdl2Window window, Sdl2ControllerTracker controller)
         {
             _gd = gd;
             _useReverseDepth = gd.IsDepthRangeZeroToOne;
@@ -62,7 +63,8 @@ namespace Veldrid.NeoDemo
         public Matrix4x4 ProjectionMatrix => _projectionMatrix;
 
         public Vector3 Position { get => _position; set { _position = value; UpdateViewMatrix(); } }
-        public Vector3 LookDirection => _lookDirection;
+        public Vector3 LookAt { get => _lookat; set { _lookat = value; UpdateViewMatrix(); } }
+        //public Vector3 LookDirection => _lookDirection;
 
         public float FarDistance => _far;
 
@@ -71,8 +73,8 @@ namespace Veldrid.NeoDemo
 
         public float AspectRatio => _windowWidth / _windowHeight;
 
-        public float Yaw { get => _yaw; set { _yaw = value; UpdateViewMatrix(); } }
-        public float Pitch { get => _pitch; set { _pitch = value; UpdateViewMatrix(); } }
+        //public float Yaw { get => _yaw; set { _yaw = value; UpdateViewMatrix(); } }
+        //public float Pitch { get => _pitch; set { _pitch = value; UpdateViewMatrix(); } }
 
         public Sdl2ControllerTracker Controller { get => _controller; set => _controller = value; }
 
@@ -167,21 +169,21 @@ namespace Veldrid.NeoDemo
                 _mousePressed = false;
             }
 
-            if (_controller != null)
-            {
-                float controllerRightX = _controller.GetAxis(SDL_GameControllerAxis.RightX);
-                float controllerRightY = _controller.GetAxis(SDL_GameControllerAxis.RightY);
-                if (MathF.Abs(controllerRightX) > 0.2f)
-                {
-                    Yaw += -controllerRightX * deltaSeconds;
-                }
-                if (MathF.Abs(controllerRightY) > 0.2f)
-                {
-                    Pitch += -controllerRightY * deltaSeconds;
-                }
-            }
+            //if (_controller != null)
+            //{
+            //    float controllerRightX = _controller.GetAxis(SDL_GameControllerAxis.RightX);
+            //    float controllerRightY = _controller.GetAxis(SDL_GameControllerAxis.RightY);
+            //    if (MathF.Abs(controllerRightX) > 0.2f)
+            //    {
+            //        Yaw += -controllerRightX * deltaSeconds;
+            //    }
+            //    if (MathF.Abs(controllerRightY) > 0.2f)
+            //    {
+            //        Pitch += -controllerRightY * deltaSeconds;
+            //    }
+            //}
 
-            Pitch = Math.Clamp(Pitch, -1.55f, 1.55f);
+            //Pitch = Math.Clamp(Pitch, -1.55f, 1.55f);
             UpdateViewMatrix();
         }
 
@@ -204,10 +206,19 @@ namespace Veldrid.NeoDemo
             ProjectionChanged?.Invoke(_projectionMatrix);
         }
 
+        //private void UpdateViewMatrix()
+        //{
+        //    Quaternion lookRotation = Quaternion.CreateFromYawPitchRoll(Yaw, Pitch, 0f);
+        //    Vector3 lookDir = Vector3.Transform(-Vector3.UnitZ, lookRotation);
+        //    _lookDirection = lookDir;
+        //    _viewMatrix = Matrix4x4.CreateLookAt(_position, _position + _lookDirection, Vector3.UnitY);
+        //    ViewChanged?.Invoke(_viewMatrix);
+        //}
+
         private void UpdateViewMatrix()
         {
             Quaternion lookRotation = Quaternion.CreateFromYawPitchRoll(Yaw, Pitch, 0f);
-            Vector3 lookDir = Vector3.Transform(-Vector3.UnitZ * 0.5f, lookRotation);
+            Vector3 lookDir = Vector3.Transform(-Vector3.UnitZ, lookRotation);
             _lookDirection = lookDir;
             _viewMatrix = Matrix4x4.CreateLookAt(_position, _position + _lookDirection, Vector3.UnitY);
             ViewChanged?.Invoke(_viewMatrix);

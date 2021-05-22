@@ -8,7 +8,7 @@ using Veldrid.Sdl2;
 
 namespace Veldrid.NeoDemo
 {
-    public class Camera : IUpdateable
+    public class FPSCamera : IUpdateable
     {
         private float _fov = 1f;
         private float _near = 1f;
@@ -36,7 +36,7 @@ namespace Veldrid.NeoDemo
         public event Action<Matrix4x4> ProjectionChanged;
         public event Action<Matrix4x4> ViewChanged;
 
-        public Camera(GraphicsDevice gd, Sdl2Window window, Sdl2ControllerTracker controller)
+        public FPSCamera(GraphicsDevice gd, Sdl2Window window, Sdl2ControllerTracker controller)
         {
             _gd = gd;
             _useReverseDepth = gd.IsDepthRangeZeroToOne;
@@ -207,7 +207,7 @@ namespace Veldrid.NeoDemo
         private void UpdateViewMatrix()
         {
             Quaternion lookRotation = Quaternion.CreateFromYawPitchRoll(Yaw, Pitch, 0f);
-            Vector3 lookDir = Vector3.Transform(-Vector3.UnitZ * 0.5f, lookRotation);
+            Vector3 lookDir = Vector3.Transform(-Vector3.UnitZ, lookRotation);
             _lookDirection = lookDir;
             _viewMatrix = Matrix4x4.CreateLookAt(_position, _position + _lookDirection, Vector3.UnitY);
             ViewChanged?.Invoke(_viewMatrix);

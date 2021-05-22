@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="NeoDemo\LookatCamera.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Shaders\GLSL\imgui-frag.glsl" />
     <None Remove="Shaders\GLSL\imgui-vertex.glsl" />
     <None Remove="Shaders\HLSL\imgui-frag.hlsl.bytes" />
@@ -29,6 +33,10 @@
     <EmbeddedResource Include="Shaders\Metal\imgui-vertex.metallib" />
     <EmbeddedResource Include="Shaders\SPIR-V\imgui-frag.spv" />
     <EmbeddedResource Include="Shaders\SPIR-V\imgui-vertex.spv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="NeoDemo\LookatCamera.cs" />
   </ItemGroup>
 
   <ItemGroup>
