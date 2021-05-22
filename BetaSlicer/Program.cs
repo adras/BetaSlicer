@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BetaSlicer.GUI;
+using System;
 
 namespace BetaSlicer
 {
@@ -6,7 +7,8 @@ namespace BetaSlicer
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
         }
     }
 }
