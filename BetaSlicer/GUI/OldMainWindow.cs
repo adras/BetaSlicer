@@ -222,10 +222,7 @@ namespace BetaSlicer.GUI
             memoryEditor = new MemoryEditor();
             memoryEditorData = Enumerable.Range(0, 1024).Select(i => (byte)random.Next(255)).ToArray();
 
-
-
-
-            _scene = new Scene(graphicsDevice, window, _controllerTracker);
+            _scene = new Scene(graphicsDevice, window);
 
             _sc.SetCurrentScene(_scene);
 

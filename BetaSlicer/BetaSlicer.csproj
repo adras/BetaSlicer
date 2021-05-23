@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="GUI\OldMainWindow.cs" />
     <Compile Remove="NeoDemo\LookatCamera.cs" />
   </ItemGroup>
 
@@ -37,6 +38,7 @@
 
   <ItemGroup>
     <None Include="..\TODO.md" Link="TODO.md" />
+    <None Include="GUI\OldMainWindow.cs" />
     <None Include="NeoDemo\LookatCamera.cs" />
   </ItemGroup>
 
