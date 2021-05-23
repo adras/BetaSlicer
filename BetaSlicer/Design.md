@@ -53,3 +53,19 @@ A game Controller can be initialized like this:
             Sdl2ControllerTracker.CreateDefault(out _controllerTracker);
 
 CreateDefault can also be called during the Update process to reconnect it again
+
+# ImportedObject
+Currently an .obj file is read as textured mesh, which is added to the scene. The textured mesh basically consists of a lot of vectors.
+
+Add a min/max algorithm to get the min and max dimensions while the file is being read. From there on the center can be calculated.
+
+Add a new Class which holds the Textured mesh along with this extra information
+
+NOTE: A TexturedMesh already has a bounding box, so no min/max algorithm required
+
+This can be used to have the camera to look at the model by:
+Vector3 cameraPos = Camera.position;
+Vector3 modelCenter = ImportedObject.center;
+
+Vector3 lookDir = cameraPos - modelCenter; // Maybe normalized
+Vector3 newCameraPos = cameraPos - (lookDir.Normalized) * ImportedObject.AllAxisSize.length

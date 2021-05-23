@@ -32,7 +32,6 @@ namespace Veldrid.NeoDemo.Objects
         private ResourceSet _mainProjViewRS;
         private ResourceSet _mainSharedRS;
         private ResourceSet _mainPerObjectRS;
-        private ResourceSet _reflectionRS;
         private ResourceSet _noReflectionRS;
         private Pipeline _shadowMapPipeline;
         private ResourceSet[] _shadowMapResourceSets;
@@ -220,12 +219,6 @@ namespace Veldrid.NeoDemo.Objects
                 sc.FarShadowMapView,
                 gd.PointSampler));
 
-            _reflectionRS = StaticResourceCache.GetResourceSet(gd.ResourceFactory, new ResourceSetDescription(reflectionLayout,
-                _alphaMapView, // Doesn't really matter -- just don't bind the actual reflection map since it's being rendered to.
-                gd.PointSampler,
-                sc.ReflectionViewProjBuffer,
-                sc.MirrorClipPlaneBuffer));
-
             _noReflectionRS = StaticResourceCache.GetResourceSet(gd.ResourceFactory, new ResourceSetDescription(reflectionLayout,
                 sc.ReflectionColorView,
                 gd.PointSampler,
@@ -340,7 +333,7 @@ namespace Veldrid.NeoDemo.Objects
             cl.SetGraphicsResourceSet(1, _mainSharedRS);
             uint offset = _uniformOffset;
             cl.SetGraphicsResourceSet(2, _mainPerObjectRS, 1, ref offset);
-            cl.SetGraphicsResourceSet(3, reflectionPass ? _reflectionRS : _noReflectionRS);
+            cl.SetGraphicsResourceSet(3, _noReflectionRS);
             cl.DrawIndexed((uint)_indexCount, 1, 0, 0, 0);
         }
     }

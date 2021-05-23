@@ -9,6 +9,9 @@
 	- Remove everything that is not required for the final Slicer
 	- Keep everything that might be handy in the future
 	- Use F11 to step through every single line to identify what can be removed
+* Default model scaling changed from 0.1f to 1 - Therefore the nearplane can be increased again
+* Implement ImportedObject layer - see Design
+* Add support to have Camera to look at ImportedObject
 * Add support to click on imported models
 * Add support to remove imported model
 * Add list of imported models
