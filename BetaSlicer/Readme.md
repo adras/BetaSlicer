@@ -13,3 +13,10 @@ Veldrid nuget package is only available in version 4.8 right now, but this proje
 
 https://github.com/mellinoe/veldrid
 https://www.myget.org/feed/mellinoe/package/nuget/Veldrid
+
+Veldrid getting started guide:
+
+https://veldrid.dev/articles/getting-started/intro.html
+
+------
+Zoom issue explanation? https://stackoverflow.com/questions/20517703/zoom-in-opengl-es-2-0-object-disappearing

@@ -11,7 +11,9 @@ namespace Veldrid.NeoDemo
     public class Camera : IUpdateable
     {
         private float _fov = 1f;
-        private float _near = 1f;
+
+        // Using a very low near plane to allow close zooming because the models can be quite small
+        private float _near = 0.001f;
         private float _far = 1000f;
 
         private Matrix4x4 _viewMatrix;
@@ -79,7 +81,7 @@ namespace Veldrid.NeoDemo
         public void Update(float deltaSeconds)
         {
             float sprintFactor = InputTracker.GetKey(Key.ControlLeft)
-                ? 0.1f
+                ? 0.01f
                 : InputTracker.GetKey(Key.ShiftLeft)
                     ? 2.5f
                     : 1f;
@@ -207,7 +209,7 @@ namespace Veldrid.NeoDemo
         private void UpdateViewMatrix()
         {
             Quaternion lookRotation = Quaternion.CreateFromYawPitchRoll(Yaw, Pitch, 0f);
-            Vector3 lookDir = Vector3.Transform(-Vector3.UnitZ * 0.5f, lookRotation);
+            Vector3 lookDir = Vector3.Transform(-Vector3.UnitZ, lookRotation);
             _lookDirection = lookDir;
             _viewMatrix = Matrix4x4.CreateLookAt(_position, _position + _lookDirection, Vector3.UnitY);
             ViewChanged?.Invoke(_viewMatrix);
