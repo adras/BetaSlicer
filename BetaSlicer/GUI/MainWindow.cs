@@ -11,6 +11,7 @@ using Veldrid.Utilities;
 using Veldrid.Sdl2;
 using System.Runtime.CompilerServices;
 using BetaSlicer.GUI;
+using BetaSlicer.NeoDemo;
 
 namespace Veldrid.NeoDemo
 {
@@ -90,7 +91,7 @@ namespace Veldrid.NeoDemo
             Skybox skybox = Skybox.LoadDefaultSkybox();
             _scene.AddRenderable(skybox);
 
-            Something.AddSponzaAtriumObjects(_scene);
+            Something.AddSponzaAtriumObjects(_scene, AssetHelper.GetPath("cat.obj"));
             // Atrium Position
             _sc.Camera.Position = new Vector3(-80, 25, -4.3f);
             _sc.Camera.Yaw = -MathF.PI / 2;
