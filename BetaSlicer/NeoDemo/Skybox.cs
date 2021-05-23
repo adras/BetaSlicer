@@ -94,13 +94,15 @@ namespace Veldrid.NeoDemo.Objects
 
         public static Skybox LoadDefaultSkybox()
         {
-            return new Skybox(
-                Image.Load<Rgba32>(AssetHelper.GetPath("Textures/cloudtop/cloudtop_ft.png")),
-                Image.Load<Rgba32>(AssetHelper.GetPath("Textures/cloudtop/cloudtop_bk.png")),
-                Image.Load<Rgba32>(AssetHelper.GetPath("Textures/cloudtop/cloudtop_lf.png")),
-                Image.Load<Rgba32>(AssetHelper.GetPath("Textures/cloudtop/cloudtop_rt.png")),
-                Image.Load<Rgba32>(AssetHelper.GetPath("Textures/cloudtop/cloudtop_up.png")),
-                Image.Load<Rgba32>(AssetHelper.GetPath("Textures/cloudtop/cloudtop_dn.png")));
+            Image<Rgba32> ftImage = Image.Load<Rgba32>(AssetHelper.GetPath("Textures/cloudtop/cloudtop_ft.png"));
+            Image<Rgba32> bkImage = Image.Load<Rgba32>(AssetHelper.GetPath("Textures/cloudtop/cloudtop_bk.png"));
+            Image<Rgba32> lfImage = Image.Load<Rgba32>(AssetHelper.GetPath("Textures/cloudtop/cloudtop_lf.png"));
+            Image<Rgba32> rtImage = Image.Load<Rgba32>(AssetHelper.GetPath("Textures/cloudtop/cloudtop_rt.png"));
+            Image<Rgba32> upImage = Image.Load<Rgba32>(AssetHelper.GetPath("Textures/cloudtop/cloudtop_up.png"));
+            Image<Rgba32> dnImage = Image.Load<Rgba32>(AssetHelper.GetPath("Textures/cloudtop/cloudtop_dn.png"));
+
+            Skybox skybox = new Skybox(ftImage, bkImage, lfImage, rtImage, upImage, dnImage);
+            return skybox;
         }
 
         public override void DestroyDeviceObjects()

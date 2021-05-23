@@ -57,7 +57,7 @@ namespace BetaSlicer.GUI
 
                 foreach (ObjFile.MeshGroup group in atriumFile.MeshGroups)
                 {
-                    Vector3 scale = new Vector3(0.1f);
+                    Vector3 scale = new Vector3(1f);
                     ConstructedMeshInfo mesh = atriumFile.GetMesh(group);
                     //MaterialDefinition materialDef = atriumMtls.Definitions[mesh.MaterialName];
                     ImageSharpTexture overrideTextureData = null;

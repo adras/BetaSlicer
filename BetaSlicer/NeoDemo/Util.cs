@@ -102,12 +102,7 @@ namespace Veldrid.NeoDemo
             return result;
         }
 
-        public static Matrix4x4 CreatePerspective(
-            GraphicsDevice gd,
-            bool useReverseDepth,
-            float fov,
-            float aspectRatio,
-            float near, float far)
+        public static Matrix4x4 CreatePerspective(GraphicsDevice gd, bool useReverseDepth, float fov, float aspectRatio, float near, float far)
         {
             Matrix4x4 persp;
             if (useReverseDepth)

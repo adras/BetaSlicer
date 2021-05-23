@@ -43,6 +43,13 @@ namespace Veldrid.NeoDemo
         float _midCascadeLimit = 300;
         float _farCascadeLimit;
 
+        private readonly HashSet<Renderable> _allPerFrameRenderablesSet = new HashSet<Renderable>();
+        private readonly RenderQueue[] _renderQueues = Enumerable.Range(0, 4).Select(i => new RenderQueue()).ToArray();
+        private readonly List<CullRenderable>[] _cullableStage = Enumerable.Range(0, 4).Select(i => new List<CullRenderable>()).ToArray();
+        private readonly List<Renderable>[] _renderableStage = Enumerable.Range(0, 4).Select(i => new List<Renderable>()).ToArray();
+        private readonly Task[] _tasks = new Task[4];
+
+
         public Scene(GraphicsDevice gd, Sdl2Window window)
         {
             _camera = new Camera(gd, window);
@@ -52,14 +59,14 @@ namespace Veldrid.NeoDemo
 
         public void AddRenderable(Renderable r)
         {
-            if (r is CullRenderable cr)
+            CullRenderable cr = r as CullRenderable;
+            if (cr != null)
             {
                 _octree.AddItem(cr.BoundingBox, cr);
+                return;
             }
-            else
-            {
-                _freeRenderables.Add(r);
-            }
+
+            _freeRenderables.Add(r);
         }
 
         public void AddUpdateable(IUpdateable updateable)
@@ -76,7 +83,6 @@ namespace Veldrid.NeoDemo
             }
         }
 
-        private readonly Task[] _tasks = new Task[4];
 
         public void RenderAllStages(GraphicsDevice gd, CommandList cl, SceneContext sc)
         {
@@ -543,10 +549,6 @@ namespace Veldrid.NeoDemo
             }
         }
 
-        private readonly HashSet<Renderable> _allPerFrameRenderablesSet = new HashSet<Renderable>();
-        private readonly RenderQueue[] _renderQueues = Enumerable.Range(0, 4).Select(i => new RenderQueue()).ToArray();
-        private readonly List<CullRenderable>[] _cullableStage = Enumerable.Range(0, 4).Select(i => new List<CullRenderable>()).ToArray();
-        private readonly List<Renderable>[] _renderableStage = Enumerable.Range(0, 4).Select(i => new List<Renderable>()).ToArray();
 
         private void CollectVisibleObjects(
             ref BoundingFrustum frustum,

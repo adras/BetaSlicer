@@ -19,8 +19,8 @@ namespace Veldrid.NeoDemo
         private Matrix4x4 _viewMatrix;
         private Matrix4x4 _projectionMatrix;
 
-        private Vector3 _position = new Vector3(0, 3, 0);
-        private Vector3 _lookDirection = new Vector3(0, -.3f, -1f);
+        private Vector3 _position = new Vector3();
+        private Vector3 _lookDirection = new Vector3();
         private float _moveSpeed = 10.0f;
 
         private float _yaw;
@@ -33,9 +33,6 @@ namespace Veldrid.NeoDemo
         private float _windowWidth;
         private float _windowHeight;
         private Sdl2Window _window;
-
-        public event Action<Matrix4x4> ProjectionChanged;
-        public event Action<Matrix4x4> ViewChanged;
 
         public Camera(GraphicsDevice gd, Sdl2Window window)
         {
@@ -126,14 +123,14 @@ namespace Veldrid.NeoDemo
                     _mousePressed = true;
                     _mousePressedPos = InputTracker.MousePosition;
                     Sdl2Native.SDL_ShowCursor(0);
-                    Sdl2Native.SDL_SetWindowGrab(_window.SdlWindowHandle, true); 
+                    Sdl2Native.SDL_SetWindowGrab(_window.SdlWindowHandle, true);
                 }
                 Vector2 mouseDelta = _mousePressedPos - InputTracker.MousePosition;
                 Sdl2Native.SDL_WarpMouseInWindow(_window.SdlWindowHandle, (int)_mousePressedPos.X, (int)_mousePressedPos.Y);
                 Yaw += mouseDelta.X * 0.002f;
                 Pitch += mouseDelta.Y * 0.002f;
             }
-            else if(_mousePressed)
+            else if (_mousePressed)
             {
                 Sdl2Native.SDL_WarpMouseInWindow(_window.SdlWindowHandle, (int)_mousePressedPos.X, (int)_mousePressedPos.Y);
                 Sdl2Native.SDL_SetWindowGrab(_window.SdlWindowHandle, false);
@@ -154,14 +151,8 @@ namespace Veldrid.NeoDemo
 
         private void UpdatePerspectiveMatrix()
         {
-            _projectionMatrix = Util.CreatePerspective(
-                _gd,
-                _useReverseDepth,
-                _fov,
-                _windowWidth / _windowHeight,
-                _near,
-                _far);
-            ProjectionChanged?.Invoke(_projectionMatrix);
+            float aspectRatio = _windowWidth / _windowHeight;
+            _projectionMatrix = Util.CreatePerspective(_gd, _useReverseDepth, _fov, aspectRatio, _near, _far);
         }
 
         private void UpdateViewMatrix()
@@ -170,7 +161,6 @@ namespace Veldrid.NeoDemo
             Vector3 lookDir = Vector3.Transform(-Vector3.UnitZ, lookRotation);
             _lookDirection = lookDir;
             _viewMatrix = Matrix4x4.CreateLookAt(_position, _position + _lookDirection, Vector3.UnitY);
-            ViewChanged?.Invoke(_viewMatrix);
         }
 
         public CameraInfo GetCameraInfo() => new CameraInfo
