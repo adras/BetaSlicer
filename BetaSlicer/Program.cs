@@ -12,6 +12,7 @@ namespace BetaSlicer
             //mainWindow.Show();
 
             MainWindow window = new MainWindow();
+            window.Initialize();
             window.Run();
         }
     }

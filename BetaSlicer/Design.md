@@ -43,3 +43,13 @@ https://github.com/gradientspace/gsSlicerApps
 
 ## GCode
 For gcode generation there's also a gradientspace library: https://github.com/gradientspace/gsGCode
+
+
+## GameController
+A game Controller can be initialized like this:
+
+        private Sdl2ControllerTracker _controllerTracker;
+            Sdl2Native.SDL_Init(SDLInitFlags.GameController);
+            Sdl2ControllerTracker.CreateDefault(out _controllerTracker);
+
+CreateDefault can also be called during the Update process to reconnect it again

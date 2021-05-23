@@ -16,10 +16,12 @@ namespace Veldrid.NeoDemo
 {
     public class MainWindow
     {
+        private bool isInitialized;
+
         private Sdl2Window _window;
         private GraphicsDevice _gd;
         private Scene _scene;
-        private readonly ImGuiRenderable _igRenderable;
+        private ImGuiRenderable _igRenderable;
         private readonly SceneContext _sc = new SceneContext();
         private bool _windowResized;
         private RenderOrderKeyComparer _renderOrderKeyComparer = new RenderOrderKeyComparer();
@@ -37,13 +39,16 @@ namespace Veldrid.NeoDemo
         private TextureSampleCount? _newSampleCount;
 
         private readonly Dictionary<string, ImageSharpTexture> _textures = new Dictionary<string, ImageSharpTexture>();
-        private Sdl2ControllerTracker _controllerTracker;
         private bool _colorSrgb = true;
         private FullScreenQuad _fsq;
         public static RenderDoc _renderDoc;
         private bool _controllerDebugMenu;
 
         public MainWindow()
+        {
+   
+        }
+        public void Initialize()
         {
             WindowCreateInfo windowCI = new WindowCreateInfo
             {
@@ -70,10 +75,9 @@ namespace Veldrid.NeoDemo
                 out _gd);
             _window.Resized += () => _windowResized = true;
 
-            Sdl2Native.SDL_Init(SDLInitFlags.GameController);
-            Sdl2ControllerTracker.CreateDefault(out _controllerTracker);
 
-            _scene = new Scene(_gd, _window, _controllerTracker);
+
+            _scene = new Scene(_gd, _window);
 
             _sc.SetCurrentScene(_scene);
 
@@ -125,6 +129,7 @@ namespace Veldrid.NeoDemo
 
             CreateAllObjects();
             ImGui.StyleColorsClassic();
+            isInitialized = true;
         }
 
         //private void AddSponzaAtriumObjects()
@@ -213,6 +218,11 @@ namespace Veldrid.NeoDemo
 
         public void Run()
         {
+            if (!isInitialized)
+            {
+                throw new NotSupportedException("Cannot show the window before it's initialized. Call Initialize first");
+            }
+
             long previousFrameTicks = 0;
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -375,21 +385,6 @@ namespace Veldrid.NeoDemo
                     {
                         RefreshDeviceObjects(100);
                     }
-                    if (_controllerTracker != null)
-                    {
-                        if (ImGui.MenuItem("Controller State"))
-                        {
-                            _controllerDebugMenu = true;
-                        }
-                    }
-                    else
-                    {
-                        if (ImGui.MenuItem("Connect to Controller"))
-                        {
-                            Sdl2ControllerTracker.CreateDefault(out _controllerTracker);
-                            _scene.Camera.Controller = _controllerTracker;
-                        }
-                    }
 
                     ImGui.EndMenu();
                 }
@@ -463,33 +458,6 @@ namespace Veldrid.NeoDemo
                         }
                     }
                     ImGui.EndMenu();
-                }
-
-                if (_controllerDebugMenu)
-                {
-                    if (ImGui.Begin("Controller State", ref _controllerDebugMenu, ImGuiWindowFlags.NoCollapse))
-                    {
-
-                        if (_controllerTracker != null)
-                        {
-                            ImGui.Columns(2);
-                            ImGui.Text($"Name: {_controllerTracker.ControllerName}");
-                            foreach (SDL_GameControllerAxis axis in (SDL_GameControllerAxis[])Enum.GetValues(typeof(SDL_GameControllerAxis)))
-                            {
-                                ImGui.Text($"{axis}: {_controllerTracker.GetAxis(axis)}");
-                            }
-                            ImGui.NextColumn();
-                            foreach (SDL_GameControllerButton button in (SDL_GameControllerButton[])Enum.GetValues(typeof(SDL_GameControllerButton)))
-                            {
-                                ImGui.Text($"{button}: {_controllerTracker.IsPressed(button)}");
-                            }
-                        }
-                        else
-                        {
-                            ImGui.Text("No controller detected.");
-                        }
-                    }
-                    ImGui.End();
                 }
 
                 ImGui.Text(_fta.CurrentAverageFramesPerSecond.ToString("000.0 fps / ") + _fta.CurrentAverageFrameTimeMilliseconds.ToString("#00.00 ms"));
