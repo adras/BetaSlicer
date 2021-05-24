@@ -69,3 +69,23 @@ Vector3 modelCenter = ImportedObject.center;
 
 Vector3 lookDir = cameraPos - modelCenter; // Maybe normalized
 Vector3 newCameraPos = cameraPos - (lookDir.Normalized) * ImportedObject.AllAxisSize.length
+
+
+# Rendering engine
+## Veldrid
+Right now veldrid is used. It seems very promising since it runs on .NET Core and supports multiple graphic APIs 
+like Vulcan, OpenGl, DirectX, AppleThingy
+
+However, it's not yet so popular that a lot of resources exist. The basic architecture seems to be very related to 
+other graphics APIs, however without knowing a lot about graphics APIs it's hard to tell the similarities.
+
+It's possible to run into a lot of issues which can not be resolved due to the lack of knowledge about rendering APIs.
+
+## OpenTK
+Another alternative which should be evaluated. If I remember correctly it exists for ages now, and should be very well 
+documented. Since it's a direct OpenGL implementation, OpenGL documentation should also apply and be helpful.
+
+ImGui seems also be supported with OpenTK: https://github.com/NogginBops/ImGui.NET_OpenTK_Sample
+
+Learing resources for OpenTK: https://github.com/opentk/LearnOpenTK
+OpenTK Also mentioned this site for learning: https://learnopengl.com/
