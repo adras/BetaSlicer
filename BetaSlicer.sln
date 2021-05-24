@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetaSlicer", "BetaSlicerVeldrid\BetaSlicerBetaSlicerVeldrid.csproj", "{5B07D40C-D806-4338-AB1A-B1E59B11FF8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetaSlicerBetaSlicerVeldrid", "BetaSlicerVeldrid\BetaSlicerBetaSlicerVeldrid.csproj", "{5B07D40C-D806-4338-AB1A-B1E59B11FF8C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BetaSlicerOpenTK", "BetaSlicerOpenTK\BetaSlicerOpenTK.csproj", "{51D4A4FF-5F2E-47A3-A984-8E390A6CDC94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetaSlicerWpf", "BetaSlicerWpf\BetaSlicerWpf.csproj", "{106B4B5D-B493-4325-A21A-E22E54BD977F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{5B07D40C-D806-4338-AB1A-B1E59B11FF8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B07D40C-D806-4338-AB1A-B1E59B11FF8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B07D40C-D806-4338-AB1A-B1E59B11FF8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51D4A4FF-5F2E-47A3-A984-8E390A6CDC94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51D4A4FF-5F2E-47A3-A984-8E390A6CDC94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51D4A4FF-5F2E-47A3-A984-8E390A6CDC94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51D4A4FF-5F2E-47A3-A984-8E390A6CDC94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{106B4B5D-B493-4325-A21A-E22E54BD977F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{106B4B5D-B493-4325-A21A-E22E54BD977F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{106B4B5D-B493-4325-A21A-E22E54BD977F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{106B4B5D-B493-4325-A21A-E22E54BD977F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
