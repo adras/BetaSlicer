@@ -3,6 +3,7 @@ using BetaSlicerCommon.WPF;
 using QuantumConcepts.Formats.StereoLithography;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,11 +29,21 @@ namespace BetaSlicerWpf
         MouseOrbitCamera mouseCamera;
         DeltaTime deltaTime;
 
+        Color frontBedColor = Color.FromArgb(255, 250, 250, 224);
+        Color backBedColor = Color.FromArgb(100, 250, 250, 224);
+        
+        DiffuseMaterial normalModelMaterial;
+        DiffuseMaterial transparentModelMaterial;
+        
+        Model3DGroup model3DGroup = new Model3DGroup();
+
+
+        public bool IsTransparent {get; set; }
+
         private void SetupView()
         {
             // Declare scene objects.
             Viewport3D viewport3D = new Viewport3D();
-            Model3DGroup model3DGroup = new Model3DGroup();
             GeometryModel3D geometryModel = new GeometryModel3D();
             ModelVisual3D modelVisual3D = new ModelVisual3D();
             // Defines the camera used to view the 3D object. In order to view the 3D object,
@@ -40,6 +51,7 @@ namespace BetaSlicerWpf
             // of the camera.
 
             SetupLighting(model3DGroup);
+            SetupMaterials();
 
             // Apply the mesh to the geometry model.
             string stlPath = @"..\..\..\..\TestStl\";
@@ -48,7 +60,7 @@ namespace BetaSlicerWpf
             // geometryModel.Geometry = GetStlGeometry(@"e:\Downloads\_3D Print Models\Gear_Bearing\bearing5.stl");
             geometryModel.Geometry = GetStlGeometry(System.IO.Path.Combine(stlPath, "TestPart2.stl"));
 
-            geometryModel.Material = GetDefaultMaterial();
+            geometryModel.Material = normalModelMaterial;
             geometryModel.BackMaterial = GetDefaultMaterial();
             //geometryModel.Transform = GetExampleTransform();
 
@@ -58,8 +70,9 @@ namespace BetaSlicerWpf
             // printer Bed
             GeometryModel3D printerBedGeometry = new GeometryModel3D();
             printerBedGeometry.Geometry = MeshGeometryHelper.CreatePrinterBed(100, 100);
-            printerBedGeometry.Material = GetDefaultMaterial();
-            //printerBedGeometry.BackMaterial = GetDefaultMaterial();
+            printerBedGeometry.Material = GetDiffuseMaterial(frontBedColor);
+            printerBedGeometry.BackMaterial = GetDiffuseMaterial(backBedColor);
+            
             model3DGroup.Children.Add(printerBedGeometry);
 
             // Add the group of models to the ModelVisual3d.
@@ -71,10 +84,19 @@ namespace BetaSlicerWpf
             viewport3D.Children.Add(modelVisual3D);
 
             // Apply the viewport to the page so it will be rendered.
-            this.Content = viewport3D;
+            dockPanel.Children.Add(viewport3D);
 
             deltaTime = new DeltaTime();
             CompositionTarget.Rendering += CompositionTarget_Rendering;
+        }
+
+        private void SetupMaterials()
+        {
+            Color modelColor = Color.FromArgb(255, 100, 100, 250);
+            Color transparentModelColor = Color.FromArgb(100, 100, 100, 250);
+
+            normalModelMaterial = GetDiffuseMaterial(modelColor);
+            transparentModelMaterial = GetDiffuseMaterial(transparentModelColor);
         }
 
         private Transform3D GetExampleTransform()
@@ -88,6 +110,12 @@ namespace BetaSlicerWpf
             myRotateTransform3D.Rotation = myAxisAngleRotation3d;
 
             return myRotateTransform3D;
+        }
+
+        DiffuseMaterial GetDiffuseMaterial(Color color)
+        {
+            DiffuseMaterial material = new DiffuseMaterial(new SolidColorBrush(color));
+            return material;
         }
 
         DiffuseMaterial GetDefaultMaterial()
@@ -113,23 +141,30 @@ namespace BetaSlicerWpf
 
         private void SetupLighting(Model3DGroup model3DGroup)
         {
+            AmbientLight ambient = new AmbientLight(Colors.White);
+            ambient.Color = Color.FromArgb(255, 50, 50, 50);
+            model3DGroup.Children.Add(ambient);
+            //return;
             // Define the lights cast in the scene. Without light, the 3D object cannot
             // be seen. Note: to illuminate an object from additional directions, create
             // additional lights.
-            DirectionalLight myDirectionalLight = CreateLight(new Vector3D(-0.61, -0.5, -0.61));
-            model3DGroup.Children.Add(myDirectionalLight);
+            
+            model3DGroup.Children.Add(CreateLight(Color.FromArgb(255, 150, 150, 150), new Vector3D(-1, -1, -0.5)));
+            model3DGroup.Children.Add(CreateLight(Color.FromArgb(255, 150, 150, 150), new Vector3D(1, 1, 0.5)));
 
-            DirectionalLight myDirectionalLight2 = CreateLight(new Vector3D(0.61, -0.5, -0.61));
-            model3DGroup.Children.Add(myDirectionalLight2);
+            model3DGroup.Children.Add(CreateLight(Color.FromArgb(255, 150, 150, 150), new Vector3D(0, 0, -1)));
 
-            DirectionalLight myDirectionalLight3 = CreateLight(new Vector3D(0.61, -0.5, 0.61));
-            model3DGroup.Children.Add(myDirectionalLight3);
+            //DirectionalLight myDirectionalLight2 = CreateLight(new Vector3D(0.61, -0.5, -0.61));
+            //model3DGroup.Children.Add(myDirectionalLight2);
+
+            //DirectionalLight myDirectionalLight3 = CreateLight(new Vector3D(0.61, -0.5, 0.61));
+            //model3DGroup.Children.Add(myDirectionalLight3);
         }
 
-        private static DirectionalLight CreateLight(Vector3D direction)
+        private static DirectionalLight CreateLight(Color color, Vector3D direction)
         {
             DirectionalLight myDirectionalLight = new DirectionalLight();
-            myDirectionalLight.Color = Colors.White;
+            myDirectionalLight.Color = color;
             myDirectionalLight.Direction = direction;
             return myDirectionalLight;
         }
@@ -224,6 +259,45 @@ namespace BetaSlicerWpf
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             SetupView();
+        }
+
+        private void mnuFileExit_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+        
+        private void mnuFileImport_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void cbTransparentOutside_Click(object sender, RoutedEventArgs e)
+        {
+            //Debug.WriteLine(IsTransparent);
+            DiffuseMaterial material;
+            if (cbTransparentOutside.IsChecked == true)
+            {
+                material = transparentModelMaterial;
+            }
+            else
+            {
+                material = normalModelMaterial;
+            }
+
+            foreach(Model3D model in model3DGroup.Children)
+            {
+                GeometryModel3D geomModel = model as GeometryModel3D;
+                if (geomModel == null)
+                    continue;
+
+                geomModel.Material = material;
+                break; // Criminal hack to avoid changing the texture of the print bed
+            }
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

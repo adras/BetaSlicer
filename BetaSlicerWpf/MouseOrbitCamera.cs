@@ -132,7 +132,7 @@ namespace BetaSlicerWpf
             lookDir.Normalize();
             up.Normalize();
 
-            Debug.WriteLine("xAngle: " + XAngle + " - yangle: " + YAngle);
+            //Debug.WriteLine("xAngle: " + XAngle + " - yangle: " + YAngle);
             perspectiveCamera.Position = (Point3D)cameraPos;
             perspectiveCamera.LookDirection = lookDir;
             perspectiveCamera.UpDirection = up;
@@ -161,6 +161,7 @@ namespace BetaSlicerWpf
         {
             Vector3D leftAxis = Vector3D.CrossProduct(perspectiveCamera.LookDirection, perspectiveCamera.UpDirection);
             Vector3D upAxis = perspectiveCamera.UpDirection;
+
 
             Vector3D translation = -leftAxis * positionDelta.X * 0.1 + upAxis * positionDelta.Y * 0.1;
             testPos += translation;
