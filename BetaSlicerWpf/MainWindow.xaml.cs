@@ -1,4 +1,7 @@
-﻿using System;
+﻿using BetaSlicerCommon;
+using BetaSlicerCommon.WPF;
+using QuantumConcepts.Formats.StereoLithography;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,39 +24,124 @@ namespace BetaSlicerWpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
-        {
-            InitializeComponent();
+        //PerspectiveCamera myPCamera;
+        Camera camera;
 
+        private void SetupView()
+        {
             // Declare scene objects.
-            Viewport3D myViewport3D = new Viewport3D();
-            Model3DGroup myModel3DGroup = new Model3DGroup();
-            GeometryModel3D myGeometryModel = new GeometryModel3D();
-            ModelVisual3D myModelVisual3D = new ModelVisual3D();
+            Viewport3D viewport3D = new Viewport3D();
+            Model3DGroup model3DGroup = new Model3DGroup();
+            GeometryModel3D geometryModel = new GeometryModel3D();
+            ModelVisual3D modelVisual3D = new ModelVisual3D();
             // Defines the camera used to view the 3D object. In order to view the 3D object,
             // the camera must be positioned and pointed such that the object is within view
             // of the camera.
-            PerspectiveCamera myPCamera = new PerspectiveCamera();
 
-            // Specify where in the 3D scene the camera is.
-            myPCamera.Position = new Point3D(0, 0, 2);
+            SetupCamera(viewport3D);
+            SetupLighting(model3DGroup);
 
-            // Specify the direction that the camera is pointing.
-            myPCamera.LookDirection = new Vector3D(0, 0, -1);
+            // Apply the mesh to the geometry model.
+            // geometryModel.Geometry = GetExampleGeometry();
+            // geometryModel.Geometry = GetStlGeometry(@"e:\Downloads\_3D Print Models\Butterfly\files\Articulated_Butterfly.stl");
+             geometryModel.Geometry = GetStlGeometry(@"e:\Downloads\_3D Print Models\Gear_Bearing\bearing5.stl");
+            // geometryModel.Geometry = GetStlGeometry(@"e:\reposNew\Everything\CSharp\Standard\UltiSlicer\3DExample\TestPart.stl"); 
 
-            // Define camera's horizontal field of view in degrees.
-            myPCamera.FieldOfView = 60;
+            geometryModel.Material = GetDefaultMaterial();
+            geometryModel.BackMaterial = GetDefaultMaterial();
+            geometryModel.Transform = GetDefaultTransform();
 
-            // Asign the camera to the viewport
-            myViewport3D.Camera = myPCamera;
+
+            // Add the geometry model to the model group.
+            model3DGroup.Children.Add(geometryModel);
+
+            // Add the group of models to the ModelVisual3d.
+            modelVisual3D.Content = model3DGroup;
+
+            //
+            viewport3D.Children.Add(modelVisual3D);
+
+            // Apply the viewport to the page so it will be rendered.
+            this.Content = viewport3D;
+
+
+        }
+
+        private Transform3D GetDefaultTransform()
+        {
+            // Apply a transform to the object. In this sample, a rotation transform is applied,
+            // rendering the 3D object rotated.
+            RotateTransform3D myRotateTransform3D = new RotateTransform3D();
+            AxisAngleRotation3D myAxisAngleRotation3d = new AxisAngleRotation3D();
+            myAxisAngleRotation3d.Axis = new Vector3D(0, 3, 0);
+            myAxisAngleRotation3d.Angle = 40;
+            myRotateTransform3D.Rotation = myAxisAngleRotation3d;
+
+            return myRotateTransform3D;
+        }
+
+        DiffuseMaterial GetDefaultMaterial()
+        {
+            // The material specifies the material applied to the 3D object. In this sample a
+            // linear gradient covers the surface of the 3D object.
+
+            // Create a horizontal linear gradient with four stops.
+            LinearGradientBrush myHorizontalGradient = new LinearGradientBrush();
+            myHorizontalGradient.StartPoint = new Point(0, 0.5);
+            myHorizontalGradient.EndPoint = new Point(1, 0.5);
+            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.Yellow, 0.0));
+            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.Red, 0.25));
+            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.Blue, 0.75));
+            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.LimeGreen, 1.0));
+
+            // Define material and apply to the mesh geometries.
+            DiffuseMaterial myMaterial = new DiffuseMaterial(myHorizontalGradient);
+
+            return myMaterial;
+        }
+
+
+        private void SetupLighting(Model3DGroup model3DGroup)
+        {
             // Define the lights cast in the scene. Without light, the 3D object cannot
             // be seen. Note: to illuminate an object from additional directions, create
             // additional lights.
+            DirectionalLight myDirectionalLight = CreateLight(new Vector3D(-0.61, -0.5, -0.61));
+            model3DGroup.Children.Add(myDirectionalLight);
+
+            DirectionalLight myDirectionalLight2 = CreateLight(new Vector3D(0.61, -0.5, -0.61));
+            model3DGroup.Children.Add(myDirectionalLight2);
+
+            DirectionalLight myDirectionalLight3 = CreateLight(new Vector3D(0.61, -0.5, 0.61));
+            model3DGroup.Children.Add(myDirectionalLight3);
+        }
+
+        private static DirectionalLight CreateLight(Vector3D direction)
+        {
             DirectionalLight myDirectionalLight = new DirectionalLight();
             myDirectionalLight.Color = Colors.White;
-            myDirectionalLight.Direction = new Vector3D(-0.61, -0.5, -0.61);
+            myDirectionalLight.Direction = direction;
+            return myDirectionalLight;
+        }
 
-            myModel3DGroup.Children.Add(myDirectionalLight);
+        private void SetupCamera(Viewport3D viewport)
+        {
+            camera = new Camera();
+            
+            // Asign the camera to the viewport
+            viewport.Camera = camera.TheCamera;
+        }
+
+        private MeshGeometry3D GetStlGeometry(string fileName)
+        {
+            IEnumerable<Facet> facets = StlFacetProvider.ReadFacets(fileName);
+            MeshGeometry3D meshGeometry = MeshGeometryProvider.CreateFromFacets(facets);
+
+            return meshGeometry;
+        }
+
+        private MeshGeometry3D GetExampleGeometry()
+        {
 
             // The geometry specifes the shape of the 3D plane. In this sample, a flat sheet
             // is created.
@@ -99,45 +187,55 @@ namespace BetaSlicerWpf
             myTriangleIndicesCollection.Add(3);
             myMeshGeometry3D.TriangleIndices = myTriangleIndicesCollection;
 
-            // Apply the mesh to the geometry model.
-            myGeometryModel.Geometry = myMeshGeometry3D;
+            return myMeshGeometry3D;
+        }
 
-            // The material specifies the material applied to the 3D object. In this sample a
-            // linear gradient covers the surface of the 3D object.
+        public MainWindow()
+        {
+            InitializeComponent();
 
-            // Create a horizontal linear gradient with four stops.
-            LinearGradientBrush myHorizontalGradient = new LinearGradientBrush();
-            myHorizontalGradient.StartPoint = new Point(0, 0.5);
-            myHorizontalGradient.EndPoint = new Point(1, 0.5);
-            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.Yellow, 0.0));
-            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.Red, 0.25));
-            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.Blue, 0.75));
-            myHorizontalGradient.GradientStops.Add(new GradientStop(Colors.LimeGreen, 1.0));
+            //SetupView();
+        }
 
-            // Define material and apply to the mesh geometries.
-            DiffuseMaterial myMaterial = new DiffuseMaterial(myHorizontalGradient);
-            myGeometryModel.Material = myMaterial;
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Up:
+                    camera.CameraPhi += Camera.CameraDPhi;
+                    if (camera.CameraPhi > Math.PI / 2.0) 
+                        camera.CameraPhi = Math.PI / 2.0;
+                    break;
+                case Key.Down:
+                    camera.CameraPhi -= Camera.CameraDPhi;
+                    if (camera.CameraPhi < -Math.PI / 2.0) 
+                        camera.CameraPhi = -Math.PI / 2.0;
+                    break;
+                case Key.Left:
+                    camera.CameraTheta += Camera.CameraDTheta;
+                    break;
+                case Key.Right:
+                    camera.CameraTheta -= Camera.CameraDTheta;
+                    break;
+                case Key.Add:
+                case Key.OemPlus:
+                    camera.CameraR -= Camera.CameraDR;
+                    if (camera.CameraR < Camera.CameraDR)
+                        camera.CameraR = Camera.CameraDR;
+                    break;
+                case Key.Subtract:
+                case Key.OemMinus:
+                    camera.CameraR += Camera.CameraDR;
+                    break;
+            }
 
-            // Apply a transform to the object. In this sample, a rotation transform is applied,
-            // rendering the 3D object rotated.
-            RotateTransform3D myRotateTransform3D = new RotateTransform3D();
-            AxisAngleRotation3D myAxisAngleRotation3d = new AxisAngleRotation3D();
-            myAxisAngleRotation3d.Axis = new Vector3D(0, 3, 0);
-            myAxisAngleRotation3d.Angle = 40;
-            myRotateTransform3D.Rotation = myAxisAngleRotation3d;
-            myGeometryModel.Transform = myRotateTransform3D;
+            // Update the camera's position.
+            camera.PositionCamera();
+        }
 
-            // Add the geometry model to the model group.
-            myModel3DGroup.Children.Add(myGeometryModel);
-
-            // Add the group of models to the ModelVisual3d.
-            myModelVisual3D.Content = myModel3DGroup;
-
-            //
-            myViewport3D.Children.Add(myModelVisual3D);
-
-            // Apply the viewport to the page so it will be rendered.
-            this.Content = myViewport3D;
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            SetupView();
         }
     }
 }

@@ -6,4 +6,12 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="QuantumConcepts.Formats.STL.netcore" Version="1.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BetaSlicerCommon\BetaSlicerCommon.csproj" />
+  </ItemGroup>
+
 </Project>

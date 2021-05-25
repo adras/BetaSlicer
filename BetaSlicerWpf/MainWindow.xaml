@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BetaSlicerWpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" KeyDown="Window_KeyDown" Loaded="Window_Loaded">
     <Grid>
         <DockPanel>
             <Viewbox>
@@ -75,7 +75,6 @@
                                 </ModelVisual3D.Content>
                             </ModelVisual3D>
                         </Viewport3D.Children>
-
                     </Viewport3D>
                 </Canvas>
             </Viewbox>
