@@ -24,8 +24,9 @@ namespace BetaSlicerWpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        //PerspectiveCamera myPCamera;
-        Camera camera;
+        //KeyboardCamera camera;
+        MouseOrbitCamera mouseCamera;
+        DeltaTime deltaTime;
 
         private void SetupView()
         {
@@ -38,25 +39,32 @@ namespace BetaSlicerWpf
             // the camera must be positioned and pointed such that the object is within view
             // of the camera.
 
-            SetupCamera(viewport3D);
             SetupLighting(model3DGroup);
 
             // Apply the mesh to the geometry model.
             // geometryModel.Geometry = GetExampleGeometry();
             // geometryModel.Geometry = GetStlGeometry(@"e:\Downloads\_3D Print Models\Butterfly\files\Articulated_Butterfly.stl");
-             geometryModel.Geometry = GetStlGeometry(@"e:\Downloads\_3D Print Models\Gear_Bearing\bearing5.stl");
-            // geometryModel.Geometry = GetStlGeometry(@"e:\reposNew\Everything\CSharp\Standard\UltiSlicer\3DExample\TestPart.stl"); 
+            // geometryModel.Geometry = GetStlGeometry(@"e:\Downloads\_3D Print Models\Gear_Bearing\bearing5.stl");
+            geometryModel.Geometry = GetStlGeometry(@"e:\reposNew\BetaSlicer\BetaSlicer\TestStl\TestPart2.stl");
 
             geometryModel.Material = GetDefaultMaterial();
             geometryModel.BackMaterial = GetDefaultMaterial();
-            geometryModel.Transform = GetDefaultTransform();
-
+            //geometryModel.Transform = GetExampleTransform();
 
             // Add the geometry model to the model group.
             model3DGroup.Children.Add(geometryModel);
 
+            // printer Bed
+            GeometryModel3D printerBedGeometry = new GeometryModel3D();
+            printerBedGeometry.Geometry = MeshGeometryHelper.CreatePrinterBed(100, 100);
+            printerBedGeometry.Material = GetDefaultMaterial();
+            //printerBedGeometry.BackMaterial = GetDefaultMaterial();
+            model3DGroup.Children.Add(printerBedGeometry);
+
             // Add the group of models to the ModelVisual3d.
             modelVisual3D.Content = model3DGroup;
+
+            SetupCamera(viewport3D, geometryModel.Geometry);
 
             //
             viewport3D.Children.Add(modelVisual3D);
@@ -64,10 +72,11 @@ namespace BetaSlicerWpf
             // Apply the viewport to the page so it will be rendered.
             this.Content = viewport3D;
 
-
+            deltaTime = new DeltaTime();
+            CompositionTarget.Rendering += CompositionTarget_Rendering;
         }
 
-        private Transform3D GetDefaultTransform()
+        private Transform3D GetExampleTransform()
         {
             // Apply a transform to the object. In this sample, a rotation transform is applied,
             // rendering the 3D object rotated.
@@ -124,18 +133,37 @@ namespace BetaSlicerWpf
             return myDirectionalLight;
         }
 
-        private void SetupCamera(Viewport3D viewport)
+        private void SetupCamera(Viewport3D viewport, Geometry3D geometry)
         {
-            camera = new Camera();
-            
+            //camera = new KeyboardCamera();
+            mouseCamera = new MouseOrbitCamera(this);
+
+            Vector3D lookAt = MeshGeometryHelper.GetCenter(geometry);
+
+            double zDistance = 10 * geometry.Bounds.Size.Z;
+
+            // Screen far ==> negative axis
+            // Screen close ==> positive axis
+
+            // Zoom out in z direction by ZDistance amount
+            Vector3D cameraPosition = new Vector3D(0, 0, 1) * zDistance - lookAt;
+            Vector3D lookDirection = lookAt - cameraPosition;
+            lookDirection.Normalize();
+
+            Vector3D up = Vector3D.CrossProduct(lookDirection, new Vector3D(-1, 0, 0));
+
+            mouseCamera.perspectiveCamera.LookDirection = lookDirection;
+            mouseCamera.perspectiveCamera.Position = (Point3D)cameraPosition;
+            mouseCamera.perspectiveCamera.UpDirection = up;
+
             // Asign the camera to the viewport
-            viewport.Camera = camera.TheCamera;
+            viewport.Camera = mouseCamera.perspectiveCamera;
         }
 
         private MeshGeometry3D GetStlGeometry(string fileName)
         {
             IEnumerable<Facet> facets = StlFacetProvider.ReadFacets(fileName);
-            MeshGeometry3D meshGeometry = MeshGeometryProvider.CreateFromFacets(facets);
+            MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacets(facets);
 
             return meshGeometry;
         }
@@ -193,44 +221,18 @@ namespace BetaSlicerWpf
         public MainWindow()
         {
             InitializeComponent();
+        }
 
-            //SetupView();
+        private void CompositionTarget_Rendering(object sender, EventArgs e)
+        {
+            deltaTime.Update();
+
+            mouseCamera.Update(deltaTime);
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.Key)
-            {
-                case Key.Up:
-                    camera.CameraPhi += Camera.CameraDPhi;
-                    if (camera.CameraPhi > Math.PI / 2.0) 
-                        camera.CameraPhi = Math.PI / 2.0;
-                    break;
-                case Key.Down:
-                    camera.CameraPhi -= Camera.CameraDPhi;
-                    if (camera.CameraPhi < -Math.PI / 2.0) 
-                        camera.CameraPhi = -Math.PI / 2.0;
-                    break;
-                case Key.Left:
-                    camera.CameraTheta += Camera.CameraDTheta;
-                    break;
-                case Key.Right:
-                    camera.CameraTheta -= Camera.CameraDTheta;
-                    break;
-                case Key.Add:
-                case Key.OemPlus:
-                    camera.CameraR -= Camera.CameraDR;
-                    if (camera.CameraR < Camera.CameraDR)
-                        camera.CameraR = Camera.CameraDR;
-                    break;
-                case Key.Subtract:
-                case Key.OemMinus:
-                    camera.CameraR += Camera.CameraDR;
-                    break;
-            }
-
-            // Update the camera's position.
-            camera.PositionCamera();
+            //camera.Update(e.Key);
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

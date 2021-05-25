@@ -2,6 +2,7 @@
 using QuantumConcepts.Formats.StereoLithography;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
@@ -9,8 +10,55 @@ using System.Windows.Media.Media3D;
 
 namespace BetaSlicerCommon.WPF
 {
-    class MeshGeometryProvider
+    class MeshGeometryHelper
     {
+        public static Vector3D GetCenter(Geometry3D geometry)
+        {
+            double x = geometry.Bounds.X + geometry.Bounds.Size.X / 2.0;
+            double y = geometry.Bounds.Y + geometry.Bounds.Size.Y / 2.0;
+            double z = geometry.Bounds.Z + geometry.Bounds.Size.Z / 2.0;
+
+            Vector3D result = new Vector3D(x, y, z);
+
+            return result;
+        }
+
+        public static MeshGeometry3D CreatePrinterBed(double xWidth, double yWidth)
+        {
+            Vector3DCollection normals = new Vector3DCollection();
+            Point3DCollection vertices = new Point3DCollection();
+            PointCollection textureCoordinates = new PointCollection();
+            Int32Collection vertexIndices = new Int32Collection();
+
+            // top left, top right, bottom right, bottom left
+            vertices.Add(new Point3D(-1 * xWidth, 1 * yWidth, 0));
+            vertices.Add(new Point3D(1 * xWidth, 1 * yWidth, 0));
+            vertices.Add(new Point3D(1 * xWidth, -1 * yWidth, 0));
+            vertices.Add(new Point3D(-1 * xWidth, -1 * yWidth, 0));
+
+            // Counter clockwise
+            // top left, bottom right, top right
+            vertexIndices.Add(0);
+            vertexIndices.Add(2);
+            vertexIndices.Add(1);
+
+            // top left, bottom left, bottom right
+            vertexIndices.Add(0);
+            vertexIndices.Add(3);
+            vertexIndices.Add(2);
+
+            textureCoordinates.Add(new Point(0, 0));
+            textureCoordinates.Add(new Point(0, 1));
+            textureCoordinates.Add(new Point(1, 1));
+            textureCoordinates.Add(new Point(0, 1));
+
+            MeshGeometry3D result = new MeshGeometry3D();
+            result.Positions = vertices;
+            result.TriangleIndices = vertexIndices;
+            result.TextureCoordinates = textureCoordinates;
+            return result;
+        }
+
         public static MeshGeometry3D CreateFromFacets(IEnumerable<Facet> facets)
         {
             MeshGeometry3D myMeshGeometry3D = new MeshGeometry3D();
@@ -18,7 +66,7 @@ namespace BetaSlicerCommon.WPF
             Vector3DCollection normals = new Vector3DCollection();
             Point3DCollection vertices = new Point3DCollection();
             Int32Collection vertexIndices = new Int32Collection();
-            
+
             int vertexIndex = 0;
             foreach (Facet facet in facets)
             {
@@ -30,10 +78,21 @@ namespace BetaSlicerCommon.WPF
                     vertexIndex++;
                 }
             }
+            // Normal generation seems to be broken right now. WPF automatically generates normals when indices are set
             //myMeshGeometry3D.Normals = normals;
+
             myMeshGeometry3D.Positions = vertices;
             myMeshGeometry3D.TriangleIndices = vertexIndices;
-            
+
+            // get some information for debugging purposes
+            double testMinX = vertices.Min(v => v.X);
+            double testMinY = vertices.Min(v => v.Y);
+            double testMinZ = vertices.Min(v => v.Z);
+
+            double testMaxX = vertices.Max(v => v.X);
+            double testMaxY = vertices.Max(v => v.Y);
+            double testMaxZ = vertices.Max(v => v.Z);
+            Rect3D bounds = myMeshGeometry3D.Bounds;
 
 
             // Create a collection of normal vectors for the MeshGeometry3D.

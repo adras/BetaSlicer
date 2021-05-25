@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Input;
 using System.Windows.Media.Media3D;
 
 namespace BetaSlicerWpf
 {
-    class Camera
+    class KeyboardCamera
     {
         public PerspectiveCamera TheCamera;
 
@@ -23,13 +24,49 @@ namespace BetaSlicerWpf
         // The change in CameraR when you press + or -.
         public const double CameraDR = 1.1;
 
-        public Camera()
+        public KeyboardCamera()
         {
             TheCamera = new PerspectiveCamera();
             CameraPhi = 0.37f;
             CameraTheta = 0.52f;
             CameraR = 100;
 
+            PositionCamera();
+        }
+
+        public void Update(Key key)
+        {
+            switch (key)
+            {
+                case Key.Up:
+                    CameraPhi += CameraDPhi;
+                    if (CameraPhi > Math.PI / 2.0)
+                        CameraPhi = Math.PI / 2.0;
+                    break;
+                case Key.Down:
+                    CameraPhi -= CameraDPhi;
+                    if (CameraPhi < -Math.PI / 2.0)
+                        CameraPhi = -Math.PI / 2.0;
+                    break;
+                case Key.Left:
+                    CameraTheta += CameraDTheta;
+                    break;
+                case Key.Right:
+                    CameraTheta -= CameraDTheta;
+                    break;
+                case Key.Add:
+                case Key.OemPlus:
+                    CameraR -= CameraDR;
+                    if (CameraR < CameraDR)
+                        CameraR = CameraDR;
+                    break;
+                case Key.Subtract:
+                case Key.OemMinus:
+                    CameraR += CameraDR;
+                    break;
+            }
+
+            // Update the camera's position.
             PositionCamera();
         }
 
