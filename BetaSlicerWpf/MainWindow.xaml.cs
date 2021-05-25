@@ -147,6 +147,10 @@ namespace BetaSlicerWpf
 
             // Zoom out in z direction by ZDistance amount
             Vector3D cameraPosition = new Vector3D(0, 0, 1) * zDistance - lookAt;
+
+            // Zoom out by each axis to get a nice diagonal view
+            //Vector3D cameraPosition = new Vector3D(-1, -1, 1) * zDistance - lookAt;
+            
             Vector3D lookDirection = lookAt - cameraPosition;
             lookDirection.Normalize();
 

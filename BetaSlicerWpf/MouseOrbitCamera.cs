@@ -27,7 +27,7 @@ namespace BetaSlicerWpf
             this.uiElement = uiElement;
 
             perspectiveCamera = new PerspectiveCamera();
-            perspectiveCamera.FieldOfView = 60;
+            perspectiveCamera.FieldOfView = 30;
 
             lastMousePos = Mouse.GetPosition(uiElement);
             currentMousePos = Mouse.GetPosition(uiElement);
@@ -61,10 +61,57 @@ namespace BetaSlicerWpf
             {
                 PanCamera();
             }
+            if (Mouse.LeftButton == MouseButtonState.Pressed)
+            {
+                OrbitCamera();
+            }
             if (wheelDelta != 0)
             {
                 ZoomCamera();
             }
+        }
+
+        private void OrbitCamera()
+        {
+            //RotateTransform3D rotateTransform = (RotateTransform3D)perspectiveCamera.Transform;
+
+            //AxisAngleRotation3D rotation = new AxisAngleRotation3D(perspectiveCamera.UpDirection, -0.1);
+            //RotateTransform3D rotateTransform =new RotateTransform3D(rotation);
+            //perspectiveCamera.Transform = rotation;
+
+            // https://stackoverflow.com/questions/43375372/moving-perspectivecamera-in-the-direction-it-is-facing-in-c-sharp
+            RotateVertical(positionDelta.Y);
+            Rotate(positionDelta.X);
+            Debug.WriteLine("Up: " + perspectiveCamera.UpDirection);
+        }
+
+        public void Rotate(double d)
+        {
+            double u = 0.05;
+            double angleD = u * d;
+            Vector3D lookDirection = perspectiveCamera.LookDirection;
+
+            var m = new Matrix3D();
+            m.Translate((Vector3D)perspectiveCamera.Position);
+            m.Rotate(new Quaternion(perspectiveCamera.UpDirection, -angleD)); // Rotate about the camera's up direction to look left/right
+            perspectiveCamera.LookDirection = m.Transform(perspectiveCamera.LookDirection);
+        }
+
+        public void RotateVertical(double d)
+        {
+            double u = 0.05;
+            double angleD = u * d;
+            Vector3D lookDirection = perspectiveCamera.LookDirection;
+
+            // Cross Product gets a vector that is perpendicular to the passed in vectors (order does matter, reverse the order and the vector will point in the reverse direction)
+            var cp = Vector3D.CrossProduct(perspectiveCamera.UpDirection, lookDirection);
+            cp.Normalize();
+
+            var m = new Matrix3D();
+            m.Rotate(new Quaternion(cp, -angleD)); // Rotate about the vector from the cross product
+            perspectiveCamera.LookDirection = m.Transform(perspectiveCamera.LookDirection);
+
+            perspectiveCamera.UpDirection = Vector3D.CrossProduct(perspectiveCamera.LookDirection, cp);
         }
 
         private void ZoomCamera()
