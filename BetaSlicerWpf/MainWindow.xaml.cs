@@ -42,10 +42,11 @@ namespace BetaSlicerWpf
             SetupLighting(model3DGroup);
 
             // Apply the mesh to the geometry model.
+            string stlPath = @"..\..\..\..\TestStl\";
             // geometryModel.Geometry = GetExampleGeometry();
             // geometryModel.Geometry = GetStlGeometry(@"e:\Downloads\_3D Print Models\Butterfly\files\Articulated_Butterfly.stl");
             // geometryModel.Geometry = GetStlGeometry(@"e:\Downloads\_3D Print Models\Gear_Bearing\bearing5.stl");
-            geometryModel.Geometry = GetStlGeometry(@"e:\reposNew\BetaSlicer\BetaSlicer\TestStl\TestPart2.stl");
+            geometryModel.Geometry = GetStlGeometry(System.IO.Path.Combine(stlPath, "TestPart2.stl"));
 
             geometryModel.Material = GetDefaultMaterial();
             geometryModel.BackMaterial = GetDefaultMaterial();
@@ -135,30 +136,11 @@ namespace BetaSlicerWpf
 
         private void SetupCamera(Viewport3D viewport, Geometry3D geometry)
         {
+           
             //camera = new KeyboardCamera();
             mouseCamera = new MouseOrbitCamera(this);
-
-            Vector3D lookAt = MeshGeometryHelper.GetCenter(geometry);
-
-            double zDistance = 10 * geometry.Bounds.Size.Z;
-
-            // Screen far ==> negative axis
-            // Screen close ==> positive axis
-
-            // Zoom out in z direction by ZDistance amount
-            Vector3D cameraPosition = new Vector3D(0, 0, 1) * zDistance - lookAt;
-
-            // Zoom out by each axis to get a nice diagonal view
-            //Vector3D cameraPosition = new Vector3D(-1, -1, 1) * zDistance - lookAt;
-            
-            Vector3D lookDirection = lookAt - cameraPosition;
-            lookDirection.Normalize();
-
-            Vector3D up = Vector3D.CrossProduct(lookDirection, new Vector3D(-1, 0, 0));
-
-            mouseCamera.perspectiveCamera.LookDirection = lookDirection;
-            mouseCamera.perspectiveCamera.Position = (Point3D)cameraPosition;
-            mouseCamera.perspectiveCamera.UpDirection = up;
+            mouseCamera.XAngle = 50;
+            mouseCamera.Zoom = 400;
 
             // Asign the camera to the viewport
             viewport.Camera = mouseCamera.perspectiveCamera;
@@ -231,7 +213,7 @@ namespace BetaSlicerWpf
         {
             deltaTime.Update();
 
-            mouseCamera.Update(deltaTime);
+            mouseCamera?.Update(deltaTime);
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
