@@ -31,20 +31,19 @@ namespace BetaSlicerWpf
 
         Color frontBedColor = Color.FromArgb(255, 250, 250, 224);
         Color backBedColor = Color.FromArgb(100, 250, 250, 224);
-        
+
         DiffuseMaterial normalModelMaterial;
         DiffuseMaterial transparentModelMaterial;
-        
+
         Model3DGroup model3DGroup = new Model3DGroup();
 
 
-        public bool IsTransparent {get; set; }
+        public bool IsTransparent { get; set; }
 
         private void SetupView()
         {
             // Declare scene objects.
             Viewport3D viewport3D = new Viewport3D();
-            GeometryModel3D geometryModel = new GeometryModel3D();
             ModelVisual3D modelVisual3D = new ModelVisual3D();
             // Defines the camera used to view the 3D object. In order to view the 3D object,
             // the camera must be positioned and pointed such that the object is within view
@@ -53,11 +52,30 @@ namespace BetaSlicerWpf
             SetupLighting(model3DGroup);
             SetupMaterials();
 
-            // Apply the mesh to the geometry model.
+            GenerateModels();
+
+            // Add the group of models to the ModelVisual3d.
+            modelVisual3D.Content = model3DGroup;
+
+            SetupCamera(viewport3D);
+
+            //
+            viewport3D.Children.Add(modelVisual3D);
+
+            // Apply the viewport to the page so it will be rendered.
+            dockPanel.Children.Add(viewport3D);
+
+            deltaTime = new DeltaTime();
+            CompositionTarget.Rendering += CompositionTarget_Rendering;
+        }
+
+        private void GenerateModels()
+        {
             string stlPath = @"..\..\..\..\TestStl\";
             // geometryModel.Geometry = GetExampleGeometry();
             // geometryModel.Geometry = GetStlGeometry(@"e:\Downloads\_3D Print Models\Butterfly\files\Articulated_Butterfly.stl");
             // geometryModel.Geometry = GetStlGeometry(@"e:\Downloads\_3D Print Models\Gear_Bearing\bearing5.stl");
+            GeometryModel3D geometryModel = new GeometryModel3D();
             geometryModel.Geometry = GetStlGeometry(System.IO.Path.Combine(stlPath, "TestPart2.stl"));
 
             geometryModel.Material = normalModelMaterial;
@@ -72,22 +90,9 @@ namespace BetaSlicerWpf
             printerBedGeometry.Geometry = MeshGeometryHelper.CreatePrinterBed(100, 100);
             printerBedGeometry.Material = GetDiffuseMaterial(frontBedColor);
             printerBedGeometry.BackMaterial = GetDiffuseMaterial(backBedColor);
-            
+
             model3DGroup.Children.Add(printerBedGeometry);
-
-            // Add the group of models to the ModelVisual3d.
-            modelVisual3D.Content = model3DGroup;
-
-            SetupCamera(viewport3D, geometryModel.Geometry);
-
-            //
-            viewport3D.Children.Add(modelVisual3D);
-
-            // Apply the viewport to the page so it will be rendered.
-            dockPanel.Children.Add(viewport3D);
-
-            deltaTime = new DeltaTime();
-            CompositionTarget.Rendering += CompositionTarget_Rendering;
+   
         }
 
         private void SetupMaterials()
@@ -148,7 +153,7 @@ namespace BetaSlicerWpf
             // Define the lights cast in the scene. Without light, the 3D object cannot
             // be seen. Note: to illuminate an object from additional directions, create
             // additional lights.
-            
+
             model3DGroup.Children.Add(CreateLight(Color.FromArgb(255, 150, 150, 150), new Vector3D(-1, -1, -0.5)));
             model3DGroup.Children.Add(CreateLight(Color.FromArgb(255, 150, 150, 150), new Vector3D(1, 1, 0.5)));
 
@@ -169,9 +174,9 @@ namespace BetaSlicerWpf
             return myDirectionalLight;
         }
 
-        private void SetupCamera(Viewport3D viewport, Geometry3D geometry)
+        private void SetupCamera(Viewport3D viewport)
         {
-           
+
             //camera = new KeyboardCamera();
             mouseCamera = new MouseOrbitCamera(this);
             mouseCamera.XAngle = 50;
@@ -265,7 +270,7 @@ namespace BetaSlicerWpf
         {
             Application.Current.Shutdown();
         }
-        
+
         private void mnuFileImport_Click(object sender, RoutedEventArgs e)
         {
 
@@ -284,7 +289,7 @@ namespace BetaSlicerWpf
                 material = normalModelMaterial;
             }
 
-            foreach(Model3D model in model3DGroup.Children)
+            foreach (Model3D model in model3DGroup.Children)
             {
                 GeometryModel3D geomModel = model as GeometryModel3D;
                 if (geomModel == null)
@@ -298,6 +303,37 @@ namespace BetaSlicerWpf
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            model3DGroup.Children.Clear();
+            List<Point3D> points = new List<Point3D>();
+            points.Add(new Point3D(5, 0, 0));
+            points.Add(new Point3D(15, 0, 0));
+            points.Add(new Point3D(15, 10, 0));
+            points.Add(new Point3D(5, 20, 0));
+            points.Add(new Point3D(40, 0, 0));
+            points.Add(new Point3D(5, 50, 0));
+            points.Add(new Point3D(105, 50, 0));
+
+            IEnumerable<MeshGeometry3D> rectangles = GeometryHelper.CreateRectangle(points);
+            foreach (MeshGeometry3D mesh in rectangles)
+            {
+                GeometryModel3D geom = new GeometryModel3D();
+                geom.Material = GetDiffuseMaterial(Colors.Purple);
+                geom.BackMaterial = GetDiffuseMaterial(Colors.Cyan);
+                geom.Geometry = mesh;
+                model3DGroup.Children.Add(geom);
+            }
+            SetupLighting(model3DGroup);
+        }
+
+        private void btnNormalView_Click(object sender, RoutedEventArgs e)
+        {
+            model3DGroup.Children.Clear();
+            GenerateModels();
+            SetupLighting(model3DGroup);
         }
     }
 }

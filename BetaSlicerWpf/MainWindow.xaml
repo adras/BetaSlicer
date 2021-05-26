@@ -11,6 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="25"></RowDefinition>
             <RowDefinition></RowDefinition>
+            <RowDefinition Height="25"></RowDefinition>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
             <MenuItem Header="File">
@@ -19,16 +20,22 @@
             </MenuItem>
             <MenuItem Header="Settings">
                 <!-- Remove this, and add a Ribbon bar for features like this -->
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Transparent Outside">
-                        </Label>
-                        <CheckBox x:Name="cbTransparentOutside" IsChecked="{Binding Path=IsTransparent}" Click="cbTransparentOutside_Click"></CheckBox>
-                    </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Transparent Outside">
+                    </Label>
+                    <CheckBox x:Name="cbTransparentOutside" IsChecked="{Binding Path=IsTransparent}" Click="cbTransparentOutside_Click"></CheckBox>
+                </StackPanel>
             </MenuItem>
         </Menu>
-       
+
         <DockPanel Grid.Row="1" Name="dockPanel">
-  
+            <!-- 3D rendering will be added by code here-->
         </DockPanel>
+        <Grid Grid.Row="2">
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="btnNormalView" Click="btnNormalView_Click">Normal View</Button>
+                <Button Click="Button_Click">Slicing View</Button>
+            </StackPanel> 
+        </Grid>
     </Grid>
 </Window>
