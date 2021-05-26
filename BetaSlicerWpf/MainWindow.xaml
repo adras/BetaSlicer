@@ -34,7 +34,7 @@
         <Grid Grid.Row="2">
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="btnNormalView" Click="btnNormalView_Click">Normal View</Button>
-                <Button Click="Button_Click">Slicing View</Button>
+                <Button Click="SlicePreviewButton_Click">Slicing View</Button>
             </StackPanel> 
         </Grid>
     </Grid>

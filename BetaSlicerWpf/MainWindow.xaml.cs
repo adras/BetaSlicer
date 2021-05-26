@@ -72,11 +72,9 @@ namespace BetaSlicerWpf
         private void GenerateModels()
         {
             string stlPath = @"..\..\..\..\TestStl\";
-            // geometryModel.Geometry = GetExampleGeometry();
-            // geometryModel.Geometry = GetStlGeometry(@"e:\Downloads\_3D Print Models\Butterfly\files\Articulated_Butterfly.stl");
-            // geometryModel.Geometry = GetStlGeometry(@"e:\Downloads\_3D Print Models\Gear_Bearing\bearing5.stl");
             GeometryModel3D geometryModel = new GeometryModel3D();
-            geometryModel.Geometry = GetStlGeometry(System.IO.Path.Combine(stlPath, "TestPart2.stl"));
+            //geometryModel.Geometry = GetStlGeometry(System.IO.Path.Combine(stlPath, "TestPart2.stl"));
+            geometryModel.Geometry = GetStlGeometry(System.IO.Path.Combine(stlPath, "bearing5.stl"));
 
             geometryModel.Material = normalModelMaterial;
             geometryModel.BackMaterial = GetDefaultMaterial();
@@ -189,7 +187,8 @@ namespace BetaSlicerWpf
         private MeshGeometry3D GetStlGeometry(string fileName)
         {
             IEnumerable<Facet> facets = StlFacetProvider.ReadFacets(fileName);
-            MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacets(facets);
+            //MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacets(facets);
+            MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacetsCached(facets);
 
             return meshGeometry;
         }
@@ -305,7 +304,7 @@ namespace BetaSlicerWpf
 
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void SlicePreviewButton_Click(object sender, RoutedEventArgs e)
         {
             model3DGroup.Children.Clear();
             List<Point3D> points = new List<Point3D>();

@@ -20,6 +20,11 @@ Other than slicer, keep the values as they are, don't just apply them and then s
 ## STL file format
 Seems to be really easy to read. The binary representation is just basic datatypes as binary
 
+Reading vertices and using them for the mesh is quite redundant, right now, a vertex index is created for every vertex. 
+But in reality one and the same vertex appears several times in the file. Using the vertex indices properly could 
+reduce the amount of required vertices by a huge amount. On the other hand this could make further processing more 
+complicated. But maybe also easier
+
 ## File Types
 There seems to be a requirement for different layers, when it comes to rendering, slicing and file format reading.
 It needs to be figured out which layers make sense. Especially from a performance viewpoint. It doesn't make sense to convert the model

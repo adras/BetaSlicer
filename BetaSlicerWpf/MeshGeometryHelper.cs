@@ -59,6 +59,62 @@ namespace BetaSlicerCommon.WPF
             return result;
         }
 
+        static bool Equals(Vertex a, Vertex other)
+        {
+            if (!a.X.Equals(other.X))
+                return false;
+
+            if (!a.Y.Equals(other.Y))
+                return false;
+            if (!a.Z.Equals(other.Z))
+                return false;
+
+            return true;
+        }
+
+        static Dictionary<Point3D, int> cachedVertices;
+        public static MeshGeometry3D CreateFromFacetsCached(IEnumerable<Facet> facets)
+        {
+            MeshGeometry3D myMeshGeometry3D = new MeshGeometry3D();
+            cachedVertices = new Dictionary<Point3D, int>();
+
+            Vector3DCollection normals = new Vector3DCollection();
+            Point3DCollection vertices = new Point3DCollection();
+            Int32Collection vertexIndices = new Int32Collection();
+
+            Point3D a = new Point3D(3, 4, 5);
+            Point3D b = new Point3D(5, 4, 3);
+
+            int vertexIndex = 0;
+            foreach (Facet facet in facets)
+            {
+                normals.Add(VertexConverter.ConvertToVector3D(facet.Normal));
+                foreach (Vertex vertex in facet.Vertices)
+                {
+                    Point3D vertexPoint = VertexConverter.ConvertToPoint3D(vertex);
+                    int newIndex = vertexIndex;
+                    if (!cachedVertices.ContainsKey(vertexPoint))
+                    {
+                        cachedVertices.Add(vertexPoint, newIndex);
+                        vertices.Add(vertexPoint);
+                        vertexIndex++;
+                    }
+                    else
+                    {
+                        newIndex = cachedVertices[vertexPoint];
+                    }
+
+                    vertexIndices.Add(newIndex);
+                }
+            }
+            myMeshGeometry3D.Positions = vertices;
+            //myMeshGeometry3D.Normals = normals;
+            myMeshGeometry3D.TriangleIndices = vertexIndices;
+
+            cachedVertices.Clear();
+            return myMeshGeometry3D;
+        }
+
         public static MeshGeometry3D CreateFromFacets(IEnumerable<Facet> facets)
         {
             MeshGeometry3D myMeshGeometry3D = new MeshGeometry3D();
