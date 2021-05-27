@@ -25,16 +25,18 @@ namespace BetaSlicerCommon.WPF
 
         public static MeshGeometry3D CreatePrinterBed(double xWidth, double yWidth)
         {
+            // Use a small zHeight to lower the bed a little bit so that there's no zfighting between the bed and the model
+            double zHeight = -0.01;
             Vector3DCollection normals = new Vector3DCollection();
             Point3DCollection vertices = new Point3DCollection();
             PointCollection textureCoordinates = new PointCollection();
             Int32Collection vertexIndices = new Int32Collection();
 
             // top left, top right, bottom right, bottom left
-            vertices.Add(new Point3D(-1 * xWidth, 1 * yWidth, 0));
-            vertices.Add(new Point3D(1 * xWidth, 1 * yWidth, 0));
-            vertices.Add(new Point3D(1 * xWidth, -1 * yWidth, 0));
-            vertices.Add(new Point3D(-1 * xWidth, -1 * yWidth, 0));
+            vertices.Add(new Point3D(-1 * xWidth, 1 * yWidth, zHeight));
+            vertices.Add(new Point3D(1 * xWidth, 1 * yWidth, zHeight));
+            vertices.Add(new Point3D(1 * xWidth, -1 * yWidth, zHeight));
+            vertices.Add(new Point3D(-1 * xWidth, -1 * yWidth, zHeight));
 
             // Counter clockwise
             // top left, bottom right, top right
@@ -103,9 +105,9 @@ namespace BetaSlicerCommon.WPF
                     {
                         newIndex = cachedVertices[vertexPoint];
                     }
-
                     vertexIndices.Add(newIndex);
                 }
+
             }
             myMeshGeometry3D.Positions = vertices;
             //myMeshGeometry3D.Normals = normals;

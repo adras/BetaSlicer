@@ -187,8 +187,8 @@ namespace BetaSlicerWpf
         private MeshGeometry3D GetStlGeometry(string fileName)
         {
             IEnumerable<Facet> facets = StlFacetProvider.ReadFacets(fileName);
-            //MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacets(facets);
-            MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacetsCached(facets);
+            MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacets(facets);
+            //MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacetsCached(facets);
 
             return meshGeometry;
         }

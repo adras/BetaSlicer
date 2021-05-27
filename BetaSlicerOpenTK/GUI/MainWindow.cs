@@ -6,16 +6,18 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ImGuiNET;
-
+using BetaSlicerOpenTK.GUI;
 
 namespace BetaSlicer.GUI
 {
     class MainWindow : GameWindow
     {
         ImGuiController _controller;
+        TriangleRendering triangle;
 
         public MainWindow(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings) : base(gameWindowSettings, nativeWindowSettings)
         {
+            triangle = new TriangleRendering();
         }
 
         protected override void OnLoad()
@@ -25,6 +27,7 @@ namespace BetaSlicer.GUI
             Title += ": OpenGL Version: " + GL.GetString(StringName.Version);
 
             _controller = new ImGuiController(ClientSize.X, ClientSize.Y);
+            triangle.OnLoad();
         }
 
         protected override void OnResize(ResizeEventArgs e)
@@ -36,6 +39,8 @@ namespace BetaSlicer.GUI
 
             // Tell ImGui of the new size
             _controller.WindowResized(ClientSize.X, ClientSize.Y);
+
+            triangle.OnResize(ClientSize.X, ClientSize.Y);
         }
 
         protected override void OnRenderFrame(FrameEventArgs e)
@@ -50,6 +55,10 @@ namespace BetaSlicer.GUI
             ImGui.ShowDemoWindow();
 
             _controller.Render();
+
+
+
+            triangle.OnRenderFrame();
 
             Util.CheckGLError("End of frame");
 
@@ -69,6 +78,13 @@ namespace BetaSlicer.GUI
             base.OnMouseWheel(e);
 
             _controller.MouseScroll(e.Offset);
+        }
+
+        protected override void OnUnload()
+        {
+            base.OnUnload();
+
+            triangle.OnUnload();
         }
     }
 }
