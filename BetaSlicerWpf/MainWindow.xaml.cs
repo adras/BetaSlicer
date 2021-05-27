@@ -74,8 +74,9 @@ namespace BetaSlicerWpf
             string stlPath = @"..\..\..\..\TestStl\";
             GeometryModel3D geometryModel = new GeometryModel3D();
             //geometryModel.Geometry = GetStlGeometry(System.IO.Path.Combine(stlPath, "TestPart2.stl"));
+            //geometryModel.Geometry = GetStlGeometry(System.IO.Path.Combine(stlPath, "bearing5.stl"));
             geometryModel.Geometry = GetStlGeometry(System.IO.Path.Combine(stlPath, "bearing5.stl"));
-
+            
             geometryModel.Material = normalModelMaterial;
             geometryModel.BackMaterial = GetDefaultMaterial();
             //geometryModel.Transform = GetExampleTransform();
@@ -152,6 +153,9 @@ namespace BetaSlicerWpf
             // be seen. Note: to illuminate an object from additional directions, create
             // additional lights.
 
+            //model3DGroup.Children.Add(CreateLight(Color.FromArgb(255, 150, 150, 150), new Vector3D(0, 0, -1.0)));
+
+
             model3DGroup.Children.Add(CreateLight(Color.FromArgb(255, 150, 150, 150), new Vector3D(-1, -1, -0.5)));
             model3DGroup.Children.Add(CreateLight(Color.FromArgb(255, 150, 150, 150), new Vector3D(1, 1, 0.5)));
 
@@ -187,8 +191,9 @@ namespace BetaSlicerWpf
         private MeshGeometry3D GetStlGeometry(string fileName)
         {
             IEnumerable<Facet> facets = StlFacetProvider.ReadFacets(fileName);
-            //MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacets(facets);
-            MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacetsCached(facets);
+            MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacets(facets);
+            //MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacetsCached(facets);
+            //MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacetsNormals(facets);
 
             return meshGeometry;
         }
