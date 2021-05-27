@@ -25,6 +25,7 @@ namespace BetaSlicerCommon.WPF
 
         public static MeshGeometry3D CreatePrinterBed(double xWidth, double yWidth)
         {
+<<<<<<< HEAD
             // Use a small zHeight to lower the bed a little bit so that there's no zfighting between the bed and the model
             double zHeight = -0.01;
             Vector3DCollection normals = new Vector3DCollection();
@@ -77,6 +78,7 @@ namespace BetaSlicerCommon.WPF
         static Dictionary<Point3D, int> cachedVertices;
         public static MeshGeometry3D CreateFromFacetsCached(IEnumerable<Facet> facets)
         {
+            // Broken
             MeshGeometry3D myMeshGeometry3D = new MeshGeometry3D();
             cachedVertices = new Dictionary<Point3D, int>();
 
@@ -117,6 +119,53 @@ namespace BetaSlicerCommon.WPF
             return myMeshGeometry3D;
         }
 
+        public static MeshGeometry3D CreateFromFacetsNormals(IEnumerable<Facet> facets)
+        {
+            // also broken
+            MeshGeometry3D myMeshGeometry3D = new MeshGeometry3D();
+
+            Vector3DCollection normals = new Vector3DCollection();
+            Point3DCollection vertices = new Point3DCollection();
+            Int32Collection vertexIndices = new Int32Collection();
+
+            int vertexIndex = 0;
+            foreach (Facet facet in facets)
+            {
+                //normals.Add(-VertexConverter.ConvertToVector3D(facet.Normal));
+                //for (int i = facet.Vertices.Count - 1; i >= 0; i--)
+                //{
+                //    Vertex vertex = facet.Vertices[i];
+
+                //    vertices.Add(VertexConverter.ConvertToPoint3D(vertex));
+                //    vertexIndices.Add(vertexIndex);
+                //    vertexIndex++;
+                //}
+
+                vertices.Add(VertexConverter.ConvertToPoint3D(facet.Vertices[2]));
+                vertices.Add(VertexConverter.ConvertToPoint3D(facet.Vertices[0]));
+                vertices.Add(VertexConverter.ConvertToPoint3D(facet.Vertices[1]));
+
+                Vector3D a = VertexConverter.ConvertToVector3D(facet.Vertices[0]);
+                Vector3D b = VertexConverter.ConvertToVector3D(facet.Vertices[1]);
+                Vector3D c = VertexConverter.ConvertToVector3D(facet.Vertices[2]);
+                Vector3D normal = Vector3D.CrossProduct(c - a, c - b);
+
+                //Vector3D normal = new Vector3D(1, 1, 1);
+                normal.Normalize();
+
+                normals.Add(normal);
+                //normals.Add(new Vector3D(-10, 0, 0));
+
+            }
+            // Normal generation seems to be broken right now. WPF automatically generates normals when indices are set
+            myMeshGeometry3D.Normals = normals;
+
+            myMeshGeometry3D.Positions = vertices;
+            //myMeshGeometry3D.TriangleIndices = vertexIndices;
+
+            return myMeshGeometry3D;
+        }
+
         public static MeshGeometry3D CreateFromFacets(IEnumerable<Facet> facets)
         {
             MeshGeometry3D myMeshGeometry3D = new MeshGeometry3D();
@@ -128,7 +177,7 @@ namespace BetaSlicerCommon.WPF
             int vertexIndex = 0;
             foreach (Facet facet in facets)
             {
-                normals.Add(VertexConverter.ConvertToVector3D(facet.Normal));
+                normals.Add(-VertexConverter.ConvertToVector3D(facet.Normal));
                 foreach (Vertex vertex in facet.Vertices)
                 {
                     vertices.Add(VertexConverter.ConvertToPoint3D(vertex));
@@ -152,46 +201,6 @@ namespace BetaSlicerCommon.WPF
             double testMaxZ = vertices.Max(v => v.Z);
             Rect3D bounds = myMeshGeometry3D.Bounds;
 
-
-            // Create a collection of normal vectors for the MeshGeometry3D.
-            //Vector3DCollection myNormalCollection = new Vector3DCollection();
-            //myNormalCollection.Add(new Vector3D(0, 0, 1));
-            //myNormalCollection.Add(new Vector3D(0, 0, 1));
-            //myNormalCollection.Add(new Vector3D(0, 0, 1));
-            //myNormalCollection.Add(new Vector3D(0, 0, 1));
-            //myNormalCollection.Add(new Vector3D(0, 0, 1));
-            //myNormalCollection.Add(new Vector3D(0, 0, 1));
-            //myMeshGeometry3D.Normals = myNormalCollection;
-
-            // Create a collection of vertex positions for the MeshGeometry3D.
-            //Point3DCollection myPositionCollection = new Point3DCollection();
-            //myPositionCollection.Add(new Point3D(-0.5, -0.5, 0.5));
-            //myPositionCollection.Add(new Point3D(0.5, -0.5, 0.5));
-            //myPositionCollection.Add(new Point3D(0.5, 0.5, 0.5));
-            ////myPositionCollection.Add(new Point3D(0.5, 0.5, 0.5));
-            //myPositionCollection.Add(new Point3D(-0.5, 0.5, 0.5));
-            ////myPositionCollection.Add(new Point3D(-0.5, -0.5, 0.5));
-            //myMeshGeometry3D.Positions = myPositionCollection;
-
-            // Create a collection of texture coordinates for the MeshGeometry3D.
-            //PointCollection myTextureCoordinatesCollection = new PointCollection();
-            //myTextureCoordinatesCollection.Add(new Point(0, 0));
-            //myTextureCoordinatesCollection.Add(new Point(1, 0));
-            //myTextureCoordinatesCollection.Add(new Point(1, 1));
-            ////myTextureCoordinatesCollection.Add(new Point(1, 1));
-            //myTextureCoordinatesCollection.Add(new Point(0, 1));
-            ////myTextureCoordinatesCollection.Add(new Point(0, 0));
-            //myMeshGeometry3D.TextureCoordinates = myTextureCoordinatesCollection;
-
-            // Create a collection of triangle indices for the MeshGeometry3D.
-            //Int32Collection myTriangleIndicesCollection = new Int32Collection();
-            //myTriangleIndicesCollection.Add(0);
-            //myTriangleIndicesCollection.Add(1);
-            //myTriangleIndicesCollection.Add(2);
-            //myTriangleIndicesCollection.Add(0);
-            //myTriangleIndicesCollection.Add(2);
-            //myTriangleIndicesCollection.Add(3);
-            //myMeshGeometry3D.TriangleIndices = myTriangleIndicesCollection;
 
             return myMeshGeometry3D;
         }

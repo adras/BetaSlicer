@@ -190,6 +190,8 @@ namespace BetaSlicerWpf
             MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacets(facets);
             //MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacetsCached(facets);
 
+
+
             return meshGeometry;
         }
 
