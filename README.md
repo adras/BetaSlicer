@@ -1,3 +1,6 @@
+# Abandoned
+As of now the project is abandoned because there doesn't seem to be a proper multi-platform .NET 5 framework to do graphics with. Let me know if you find something.
+
 # BetaSlicer
 3D Printing Slicer with visionary features
 
