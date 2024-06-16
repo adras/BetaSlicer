@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BetaSlicerCommon\BetaSlicerCommon.csproj" />
+    <ProjectReference Include="..\BetaSlicerSlicing\BetaSlicerSlicing.csproj" />
   </ItemGroup>
 
 </Project>

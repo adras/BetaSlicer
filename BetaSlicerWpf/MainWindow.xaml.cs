@@ -1,5 +1,6 @@
 ﻿using BetaSlicerCommon;
 using BetaSlicerCommon.WPF;
+using BetaSlicerSlicing;
 using QuantumConcepts.Formats.StereoLithography;
 using System;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ namespace BetaSlicerWpf
         DiffuseMaterial transparentModelMaterial;
 
         Model3DGroup model3DGroup = new Model3DGroup();
-
+        GeometryContext context;
 
         public bool IsTransparent { get; set; }
 
@@ -74,7 +75,8 @@ namespace BetaSlicerWpf
             string stlPath = @"..\..\..\..\TestStl\";
             GeometryModel3D geometryModel = new GeometryModel3D();
             //geometryModel.Geometry = GetStlGeometry(System.IO.Path.Combine(stlPath, "TestPart2.stl"));
-            geometryModel.Geometry = GetStlGeometry(System.IO.Path.Combine(stlPath, "bearing5.stl"));
+            context = GetStlGeometry(System.IO.Path.Combine(stlPath, "bearing5.stl"));
+            geometryModel.Geometry = context.meshGeometry;
 
             geometryModel.Material = normalModelMaterial;
             geometryModel.BackMaterial = GetDefaultMaterial();
@@ -90,7 +92,7 @@ namespace BetaSlicerWpf
             printerBedGeometry.BackMaterial = GetDiffuseMaterial(backBedColor);
 
             model3DGroup.Children.Add(printerBedGeometry);
-   
+
         }
 
         private void SetupMaterials()
@@ -184,15 +186,16 @@ namespace BetaSlicerWpf
             viewport.Camera = mouseCamera.perspectiveCamera;
         }
 
-        private MeshGeometry3D GetStlGeometry(string fileName)
+        private GeometryContext GetStlGeometry(string fileName)
         {
             IEnumerable<Facet> facets = StlFacetProvider.ReadFacets(fileName);
             MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacets(facets);
             //MeshGeometry3D meshGeometry = MeshGeometryHelper.CreateFromFacetsCached(facets);
 
+            GeometryContext context = GeometryContext.CreateFrom(facets, meshGeometry);
 
 
-            return meshGeometry;
+            return context;
         }
 
         private MeshGeometry3D GetExampleGeometry()
@@ -306,7 +309,7 @@ namespace BetaSlicerWpf
 
         }
 
-        private void SlicePreviewButton_Click(object sender, RoutedEventArgs e)
+        private async void SlicePreviewButton_Click(object sender, RoutedEventArgs e)
         {
             model3DGroup.Children.Clear();
             List<Point3D> points = new List<Point3D>();
@@ -317,6 +320,13 @@ namespace BetaSlicerWpf
             points.Add(new Point3D(40, 0, 0));
             points.Add(new Point3D(5, 50, 0));
             points.Add(new Point3D(105, 50, 0));
+
+            MySlicer slicer = new MySlicer();
+            // This conversion sucks, gotta treat everything in a more generic way
+            SlicingData data = await slicer.Slice(context.facets);
+            sldrLayerPath.Minimum = 0;
+            sldrLayerPath.Maximum = data.layerCount;
+            
 
             IEnumerable<MeshGeometry3D> rectangles = GeometryHelper.CreateRectangle(points);
             foreach (MeshGeometry3D mesh in rectangles)
@@ -336,5 +346,7 @@ namespace BetaSlicerWpf
             GenerateModels();
             SetupLighting(model3DGroup);
         }
+
+
     }
 }
