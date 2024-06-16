@@ -25,7 +25,6 @@ namespace BetaSlicerCommon.WPF
 
         public static MeshGeometry3D CreatePrinterBed(double xWidth, double yWidth)
         {
-<<<<<<< HEAD
             // Use a small zHeight to lower the bed a little bit so that there's no zfighting between the bed and the model
             double zHeight = -0.01;
             Vector3DCollection normals = new Vector3DCollection();

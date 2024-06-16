@@ -26,7 +26,7 @@ namespace BetaSlicerWpf
         private double yAngle = 0;
         private double zoom = 0;
 
-        public double XAngle
+        public double YAngle
         {
             get
             {
@@ -39,7 +39,7 @@ namespace BetaSlicerWpf
             }
         }
 
-        public double YAngle
+        public double XAngle
         {
             get
             {
@@ -121,8 +121,8 @@ namespace BetaSlicerWpf
         private void UpdatePerspective()
         {
             Matrix3D m = new Matrix3D();
-            m.Rotate(new Quaternion(new Vector3D(1, 0, 0), XAngle));
-            m.Rotate(new Quaternion(new Vector3D(0, 0, 1), YAngle));
+            m.Rotate(new Quaternion(new Vector3D(1, 0, 0), YAngle));
+            m.Rotate(new Quaternion(new Vector3D(0, 0, 1), XAngle));
             var cameraPos = m.Transform(new Vector3D(0, 0, 1) * Zoom);
 
             //Vector3D lookDir = new Vector3D() - cameraPos;
@@ -142,11 +142,10 @@ namespace BetaSlicerWpf
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
-                YAngle += positionDelta.X;
-                XAngle += positionDelta.Y;
-
+                XAngle -= positionDelta.X;
+                YAngle -= positionDelta.Y;
             }
-            XAngle = Math.Clamp(XAngle, 1, 180);
+            YAngle = Math.Clamp(YAngle, 1, 180);
         }
 
 

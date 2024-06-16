@@ -177,7 +177,7 @@ namespace BetaSlicerWpf
 
             //camera = new KeyboardCamera();
             mouseCamera = new MouseOrbitCamera(this);
-            mouseCamera.XAngle = 50;
+            mouseCamera.YAngle = 50;
             mouseCamera.Zoom = 400;
 
             // Asign the camera to the viewport

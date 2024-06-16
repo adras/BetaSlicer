@@ -1,5 +1,12 @@
-# Abandoned
-As of now the project is abandoned because there doesn't seem to be a proper multi-platform .NET 5 framework to do graphics with. Let me know if you find something.
+# Current state
+At the moment the main application uses WPF for rendering. This is slow, however works well enough. I just don't want to write a camera and mesh rendering stuff in OpenGL right now, but the OpenTK protoype looks very promising.
+
+As of right now, the application can read a given STL file and render it.
+
+Next steps:
+* Implement slider for single layer path
+* Implement slider for complete layer browsing
+* Implement a configuration class for some fundamental settings like nozzle width, layer height
 
 # BetaSlicer
 3D Printing Slicer with visionary features
