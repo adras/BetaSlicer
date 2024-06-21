@@ -26,6 +26,7 @@ namespace BetaSlicerSlicing
 
         private void UpdateSliceGeometry(SlicingData result)
         {
+            //Clipper2Lib.Clipper.
             // Actual slizing is supposed to happen here now
         }
 
